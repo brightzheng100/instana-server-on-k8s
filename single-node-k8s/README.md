@@ -51,13 +51,13 @@ So please install them accordingly beforehand.
 
 ## The TL'DR guide
 
-Once you've met the prerequisites, the simplest way is to run these commands:
+Go through below steps within the to-be-server VM.
 
 ### 0. Prepare
 
 ```sh
 # Clone the repo
-git clone //github.com/brightzheng100/instana-server-on-k8s.git
+git clone https://github.com/brightzheng100/instana-server-on-k8s.git
 cd instana-server-on-k8s/single-node-k8s
 
 # Make a directory for hosting some working files, which will be ignored by Git
