@@ -1,0 +1,149 @@
+apiVersion: instana.io/v1beta2
+kind: Core
+metadata:
+  name: instana-core
+  namespace: instana-core
+spec:
+  agentAcceptorConfig:
+    # Host for the agent acceptor. eg: agent.instana.<xxxx.nip.io>
+    host: "agent.instana.${INSTANA_EXPOSED_FQDN}"
+    port: ${INSTANA_EXPOSED_PORT_ACCEPTOR}
+  # Base domain for Instana. eg: instana.<xxxx.nip.io>
+  baseDomain: "instana.${INSTANA_EXPOSED_FQDN}"
+  # ComponentConfig to override components' defaults, especially resources
+  componentConfigs:
+    - name: acceptor
+      replicas: 1
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: gateway
+      properties:
+        - name: nginx.http.server_names_hash_bucket_size
+          value: "256" # This is important when FQDN is long, default 128
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-health-aggregator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-health-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-reader
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-writer
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-acceptor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-health-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: gateway
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: js-stack-trace-translator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: sli-evaluator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+  # DatastoreConfigs
+  datastoreConfigs:
+    cassandraConfigs:
+      - hosts: [ default-cassandra.instana-datastores ] 
+        ports:
+          - name: tcp
+            port: 9042
+        keyspaces:
+          - profiles
+          - spans
+          - metrics
+          - state
+        authEnabled: true
+    clickhouseConfigs:
+      - hosts: [ default-clickhouse.instana-datastores ] 
+        ports:
+          - name: tcp
+            port: 9000
+          - name: http
+            port: 8123
+        schemas:
+          - application
+        clusterName: local
+        authEnabled: true
+    elasticsearchConfig:
+      hosts: [ default-elasticsearch.instana-datastores ] 
+      ports:
+        - name: tcp
+          port: 9300
+        - name: http
+          port: 9200
+      clusterName: onprem_onprem
+      authEnabled: true
+    kafkaConfig:
+      hosts: [ default-kafka.instana-datastores ]
+      ports:
+        - name: tcp
+          port: 9092
+      authEnabled: true
+    postgresConfigs:
+      - hosts: [ default-postgres.instana-datastores ] 
+        ports:
+          - name: tcp
+            port: 5432
+        databases:
+          - butlerdb
+          - tenantdb
+          - sales
+        authEnabled: true
+    beeInstanaConfig:
+      hosts: [ default-beeInstana.instana-datastores ] 
+      ports:
+        - name: tcp
+          port: 9998
+      authEnabled: true
+  # Storage configs
+  storageConfigs:
+    rawSpans:
+      pvcConfig:
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_SPANS}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_SPANS}
+        accessModes:
+          - ReadWriteOnce # local-path-config can support ReadWriteOnce only
+  # Feature Flags
+  featureFlags:
+    - name: feature.beeinstana.infra.metrics.enabled
+      enabled: true
+    - name: feature.infra.explore.presentation.enabled
+      enabled: true
+  # SMTP
+  emailConfig:
+    smtpConfig:
+      from: test@example.com
+      host: example.com
+      port: 465
+      useSSL: false
+  imageConfig:
+    registry: containers.instana.io
+  resourceProfile: small
+  imagePullSecrets:
+    - name: instana-registry
