@@ -43,8 +43,9 @@ A series tools will be installed automatically, which include:
 - `kubectl-instana plugin`, with configurable version
 - [`yq`](https://github.com/mikefarah/yq)
 
-And, there are some other tools required, which typically will be there already but the `0-init.sh` will have a double-check.
-So please install them accordingly beforehand.
+And, there are some other tools required, which typically have been installed already in the VM.
+
+Anyway, the init process will have a double-check so please make sure they're installed beforehand.
 - `curl`
 - `openssl`
 
@@ -85,6 +86,8 @@ Or, to use another desired version of Instana, if available, do something like t
 ```sh
 export INSTANA_VERSION=243-5
 ```
+
+Now, let's get started!
 
 ### 1. Init it
 
