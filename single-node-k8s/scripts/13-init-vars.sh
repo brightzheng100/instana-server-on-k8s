@@ -11,7 +11,7 @@ export_var_with_default "CALICO_MANIFEST_FILE"      "https://raw.githubuserconte
 
 ######### environment variables required by Instana installation section
 
-export_var_with_default "DATASTORE_MOUNT_ROOT"                  "/sotrage"
+export_var_with_default "DATASTORE_MOUNT_ROOT"                  "/storage"
 
 export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_BEEINSTANA"    "local-path"
