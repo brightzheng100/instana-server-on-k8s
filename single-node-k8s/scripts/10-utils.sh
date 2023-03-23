@@ -231,3 +231,37 @@ function check-namespaced-pod-status-and-keep-displaying-info {
         exit 99
     fi
 }
+
+#
+# Note: in cloud env, the default route of OpenShift might exceed the CN limit of 64 chars
+# like: instana.itzroks-550004ghs4-0sskrs-6ccd7f378ae819553d37d5f2ee142bd6-0000.eu-gb.containers.appdomain.cloud
+# so we need to truncate a bit to make it work
+# Usage:
+#   get-signing-fqdn "<CONFIGURED FQDN>"
+# Example: 
+#   get-signing-fqdn instana.itzroks-550004ghs4-0sskrs-6ccd7f378ae819553d37d5f2ee142bd6-0000.eu-gb.containers.appdomain.cloud
+#   - return: *.eu-gb.containers.appdomain.cloud
+function get-signing-fqdn {
+    local configured_fqdn="$1"
+    local fqdn_section=""
+
+    declare -a array
+    array=($(echo $configured_fqdn | tr "." "\n"))
+    length=${#array[@]}
+    local e=""
+
+    ## truncate accordingly if configured fqdn > 62 (+ *.) so >=64
+    if [ ${#configured_fqdn} -gt 62 ]; then
+        for (( i=${length}; i>1; i-- )); do
+            e="${array[$i]}"
+            tl=$(( ${#fqdn_section} + ${#e} ));
+            if [ ${tl} -le 62 ]; then
+                fqdn_section=".${e}${fqdn_section}"
+            fi
+        done
+    else
+        fqdn_section=".${configured_fqdn}"
+    fi
+
+    echo "*${fqdn_section}"
+}

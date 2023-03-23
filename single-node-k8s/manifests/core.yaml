@@ -6,10 +6,10 @@ metadata:
 spec:
   agentAcceptorConfig:
     # Host for the agent acceptor. eg: agent.instana.<xxxx.nip.io>
-    host: "agent.instana.${INSTANA_EXPOSED_FQDN}"
+    host: "agent.${INSTANA_EXPOSED_FQDN}"
     port: ${INSTANA_EXPOSED_PORT_ACCEPTOR}
   # Base domain for Instana. eg: instana.<xxxx.nip.io>
-  baseDomain: "instana.${INSTANA_EXPOSED_FQDN}"
+  baseDomain: "${INSTANA_EXPOSED_FQDN}"
   # ComponentConfig to override components' defaults, especially resources
   componentConfigs:
     - name: acceptor
@@ -131,6 +131,13 @@ spec:
           - ReadWriteOnce # local-path-config can support ReadWriteOnce only
   # Feature Flags
   featureFlags:
+    # Managing actions: https://www.ibm.com/docs/en/instana-observability/current?topic=instana-managing-actions-technology-preview
+    - name: feature.automation.enabled
+      enabled: true
+    # Apdex: https://www.ibm.com/docs/en/instana-observability/current?topic=slo-apdex-closed-beta
+    - name: feature.apdex.enabled
+      enabled: true
+    # BeeInstana
     - name: feature.beeinstana.infra.metrics.enabled
       enabled: true
     - name: feature.infra.explore.presentation.enabled

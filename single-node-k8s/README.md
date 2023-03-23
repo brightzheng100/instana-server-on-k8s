@@ -65,7 +65,7 @@ cd instana-server-on-k8s/single-node-k8s
 mkdir _wip
 
 # Export required environment variables
-export INSTANA_EXPOSED_FQDN="<THE FQDN, e.g. 159.23.100.15.nip.io or mydomain.com>"
+export INSTANA_EXPOSED_FQDN="<THE FQDN, e.g. simply IP, or instana.<IP>.nip.io, or instana.mydomain.com>"
 export INSTANA_AGENT_KEY="<THE LICENSE'S AGENT KEY>"
 export INSTANA_DOWNLOAD_KEY="<THE LICENSE'S DOWNLOAD KEY>"
 export INSTANA_SALES_KEY="<THE LICENSE'S SALES KEY>"
@@ -150,7 +150,7 @@ installing-instana-server-components-secret-tenant0-unit0
 
 installing-instana-server-components-core
 # check before proceeding: wait 10 mins for expected 20 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 10 20 "kubectl get pod -n instana-core"
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 20 "kubectl get pod -n instana-core"
 
 installing-instana-server-components-unit
 # check before proceeding: wait 10 mins for expected 6 pods

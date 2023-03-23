@@ -146,9 +146,12 @@ function installing-instana-server-components-secret-instana-core {
 function installing-instana-server-components-secret-instana-tls {
   echo "----> installing-instana-server-components-secret-instana-tls"
 
+  local signing_fqdn="$(get-signing-fqdn "${INSTANA_EXPOSED_FQDN}")"
+  logme "$color_green" "the signed FQDN for TLS is: ${signing_fqdn}"
+
   openssl req -x509 -newkey rsa:2048 -keyout \
     _wip/tls.key -out _wip/tls.crt -days 365 -nodes \
-    -subj "/CN=${INSTANA_EXPOSED_FQDN}"
+    -subj "/CN=*.${signing_fqdn}"
 
   kubectl create secret tls instana-tls --namespace instana-core \
     --cert=_wip/tls.crt --key=_wip/tls.key
@@ -203,7 +206,7 @@ function exposing-instana-server-servies {
 function how-to-access-instana {
   echo "#################################################"
   echo "You should be able to acdess Instana UI by:"
-  echo " - URL: https://instana.${INSTANA_EXPOSED_FQDN}:${INSTANA_EXPOSED_PORT}"
+  echo " - URL: https://${INSTANA_EXPOSED_FQDN}:${INSTANA_EXPOSED_PORT}"
   echo " - USER: ${INSTANA_ADMIN_USER}"
   echo " - PASSWORD: ${INSTANA_ADMIN_PWD}"
 }

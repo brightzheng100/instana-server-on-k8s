@@ -286,7 +286,7 @@ kubectl create secret generic instana-core \
 ### secret: instana-tls
 
 ```sh
-# Note: the FQDN can be IP, or <IP>.nip.io, or real FQDN like example.com
+# Note: the FQDN can be IP, or <IP>.nip.io, or instana.<IP>.nip.io, or real FQDN like instana.example.com
 export INSTANA_EXPOSED_FQDN="<YOUR FQDN TO INSTANA UI>"
 
 openssl req -x509 -newkey rsa:2048 -keyout \
