@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-datastores
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-operator
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-core
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-units

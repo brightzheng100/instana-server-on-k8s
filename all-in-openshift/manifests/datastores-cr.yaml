@@ -1,0 +1,104 @@
+---
+# datastore	    test size	  small size	medium size	large size
+# beeInstana	  10Gi	      250Gi	      500Gi	      1.5T
+# cassandra	    10Gi	      500Gi	      1T	        3T
+# clickhouse	  10Gi	      250Gi	      500Gi	      1.5T
+# - zookeeper	  2Gi	        25Gi	      50Gi	      150Gi
+# elasticsearch	10Gi	      50Gi	      100Gi	      300Gi
+# kafka	        10Gi	      50Gi	      100Gi	      300Gi
+# - zookeeper	  2Gi	        25Gi	      50Gi	      150Gi
+# postgres	    3Gi	        25Gi	      50Gi	      150Gi
+---
+apiVersion: instana.io/v1alpha1
+kind: Datastores
+metadata:
+  name: instana-datastores
+  namespace: instana-datastores
+spec:
+  imagePullSecrets:
+    - name: instana-registry
+  beeInstana:
+    name: "default"
+    authEnabled: true
+    pvcConfig:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${DATASTORE_SIZE_BEEINSTANA}
+      storageClassName: ${DATASTORE_STORAGE_CLASS_BEEINSTANA}
+  cassandra:
+    - name: "default"
+      authEnabled: true
+      pvcConfig:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_CASSANDRA}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_CASSANDRA}
+      resources:
+        requests:
+          memory: 2Gi # defaults 4Gi
+  clickhouse:
+    - name: "default"
+      authEnabled: true
+      pvcConfig:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_CLICKHOUSE}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_CLICKHOUSE}
+      resources:
+        requests:
+          memory: 2Gi # defaults 4Gi
+      zookeeper:
+        pvcConfig:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: ${DATASTORE_SIZE_CLICKHOUSE_ZK}
+          storageClassName: ${DATASTORE_STORAGE_CLASS_CLICKHOUSE_ZK}
+  elasticsearch:
+    name: "default"
+    authEnabled: true
+    pvcConfig:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${DATASTORE_SIZE_ELASTICSEARCH}
+      storageClassName: ${DATASTORE_STORAGE_CLASS_ELASTICSEARCH}
+    resources:
+      requests:
+        memory: 2Gi # defaults 4Gi
+  kafka:
+    name: "default"
+    authEnabled: true
+    pvcConfig:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${DATASTORE_SIZE_KAFKA}
+      storageClassName: ${DATASTORE_STORAGE_CLASS_KAFKA}
+    zookeeper:
+      pvcConfig:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_KAFKA_ZK}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_KAFKA_ZK}
+  postgres:
+    - name: "default"
+      authEnabled: true
+      pvcConfig:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_POSTGRES}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_POSTGRES}

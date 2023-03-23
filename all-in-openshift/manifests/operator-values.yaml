@@ -1,0 +1,5 @@
+imagePullSecrets:
+  - name: instana-registry
+operator:
+  extraArgs:
+    - "--datastores=true"
