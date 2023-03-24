@@ -13,6 +13,10 @@ In this repo, I've hosted some deployment experiments, focusing on how to deploy
 
 Refer to [single-node-k8s/README.md](./single-node-k8s/README.md).
 
+## Deploying Instana on OpenShift
+
+Refer to [all-in-openshift/README.md](./all-in-openshift/README.md).
+
 ## Deploying Instana on a "hybrid" env: ROKS + VM-based Datastores
 
 Refer to [roks-with-vm-based-datastores/README.md](./roks-with-vm-based-datastores/README.md).
