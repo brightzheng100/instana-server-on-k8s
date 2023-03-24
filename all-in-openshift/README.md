@@ -1,6 +1,6 @@
-# Deploying Instana on OpenShift / ROKS Cluter
+# Deploying Instana on OpenShift Cluter
 
-This repository guides you through how to set up Instana on a given ROKS cluster.
+This repository guides you through how to set up Instana on an OpenShift cluster.
 
 The architecture can be illustrated as below:
 
@@ -21,6 +21,8 @@ A series tools will be needed, on the laptop of VM where you run the scripts, wh
 ### The OpenShift Cluster
 
 Since we're deploying Instana on OpenShift, a cluster is required.
+
+It doesn't really matter whether it's a self-managed cluster, or a managed cluster, like RedHat OpenShift Kubernetes Service (ROKS) on IBM Cloud.
 
 I used a cluster with 3 worker nodes, each with 8 vCPU, 32G RAM, and 100G Disk.
 
