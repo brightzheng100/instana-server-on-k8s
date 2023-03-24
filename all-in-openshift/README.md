@@ -8,9 +8,9 @@ The architecture can be illustrated as below:
 
 ## Prerequisites
 
-### Tools
+### The Tools
 
-A series tools will be needed, which include:
+A series tools will be needed, on the laptop of VM where you run the scripts, which include:
 - `oc`
 - `kubectl`
 - `openssl`
@@ -18,18 +18,57 @@ A series tools will be needed, which include:
 - Instana kubectl plugin. Please visit the doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=premises-instana-kubectl-plug-in#manual-installation) to download the right `kubectl` plugin, with the desired version, and install it properly.
 - [`yq`](https://github.com/mikefarah/yq)
 
-## The TL'DR guide
+### The OpenShift Cluster
 
-You may run it in your Mac, or a Linux machine.
+Since we're deploying Instana on OpenShift, a cluster is required.
 
-**Make sure you've already logged into OpenShift with ClusterAdmin permission.**
+I used a cluster with 3 worker nodes, each with 8 vCPU, 32G RAM, and 100G Disk.
+
+With one `small` profile tenant deployed, the resource utilization is around 60% on CPU requests and 82% on memory requests.
+
+```
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests          Limits
+  --------           --------          ------
+  cpu                4534m (57%)       4600m (58%)
+  memory             24268307Ki (83%)  26262816Ki (90%)
+
+
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests          Limits
+  --------           --------          ------
+  cpu                4671m (59%)       5600m (70%)
+  memory             23933459Ki (82%)  26186016Ki (89%)
+
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests          Limits
+  --------           --------          ------
+  cpu                5070m (64%)       8340m (105%)
+  memory             22628883Ki (77%)  33489184Ki (115%)
+```
+
+Please note that the CSI-compliant storage is very important while deploying Instana on OpenShift.
+
+Basically we need two types of storage:
+- Block storage for almost everything of the datastore components;
+- `ReadWriteMany` supported file storage for raw spans, which can be set by `DATASTORE_STORAGE_CLASS_SPANS`, in a real-world multi-node cluster!
+
+
+## The TL'DR Guide
+
+You may run it in your Mac, or a Linux machine, where the required tools are installed.
+
+**And, make sure you've already logged into OpenShift with ClusterAdmin permission.**
 
 ### 0. Prepare
 
 ```sh
 # Clone the repo
 git clone https://github.com/brightzheng100/instana-server-on-k8s.git
-cd instana-server-on-k8s/all-in-roks
+cd instana-server-on-k8s/all-in-openshift
 
 # Make a directory for hosting some working files, which will be ignored by Git
 mkdir _wip
@@ -51,17 +90,11 @@ For example, to change the default Instana console login password, do something 
 export INSTANA_ADMIN_PWD=MyCoolPassword
 ```
 
-Or, to use another desired version of Instana, if available, do something like this:
-
-```sh
-export INSTANA_VERSION=243-5
-```
-
 And, quite importantly, you have to take care of the StorageClasses for a list of persistence components.
 - For normal datastore components, like `DATASTORE_STORAGE_CLASS_CASSANDRA`, use block storage;
 - For `DATASTORE_STORAGE_CLASS_SPANS`, you must set the StorageClass that supports `ReadWriteMany` in a real-world multi-node cluster!
 
-So get ready and export them accordingly to fit into your OpenShift context -- here I use `ibmc-file-gold-gid` as the file-based storage for `DATASTORE_STORAGE_CLASS_SPANS`, while `ibmc-block-gold` for the rest, both are available in ROKS Classic, on IBM Cloud.
+So get ready and export them accordingly to fit into your OpenShift context -- here I use `ibmc-file-gold-gid` as the file-based storage for `DATASTORE_STORAGE_CLASS_SPANS`, while `ibmc-block-gold` for the rest, both are available in **ROKS Classic, on IBM Cloud**.
 
 ```sh
 export DATASTORE_SIZE_BEEINSTANA="10Gi"
@@ -137,6 +170,7 @@ Now, you can print out the access info:
 ```sh
 how-to-access-instana
 ```
+
 
 ## Potential Issues & Solutions
 
