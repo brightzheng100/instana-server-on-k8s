@@ -22,7 +22,7 @@ A series tools will be needed, on the laptop of VM where you run the scripts, wh
 
 Since we're deploying Instana on OpenShift, a cluster is required.
 
-It doesn't really matter whether it's a self-managed cluster, or a managed cluster, like RedHat OpenShift Kubernetes Service (ROKS) on IBM Cloud.
+It doesn't really matter whether it's a self-managed or managed cluster, like RedHat OpenShift Kubernetes Service (ROKS) on IBM Cloud, it should just work.
 
 I used a cluster with 3 worker nodes, each with 8 vCPU, 32G RAM, and 100G Disk.
 
@@ -121,15 +121,19 @@ export DATASTORE_STORAGE_CLASS_SPANS="ibmc-file-gold-gid"
 
 Now, let's get started!
 
+
 ### 1. Init it
 
 ```sh
 source 1-init-all.sh
 ```
 
+As long as no RED LINES highlighted in the output, you're good to proceed.
+
+
 ### 2. Install Instana
 
-Similarly, if you want to install Instana in one shot, do this:
+If you want to install Instana in one shot, do this:
 
 ```sh
 ./2-install-instana.sh
@@ -167,7 +171,8 @@ exposing-instana-server-servies
 > Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes.
 > What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
 
-### 4. How to access?
+
+### 3. How to access?
 
 Once you've gone through all above steps successfully, the Instana should have been deployed.
 Now, you can print out the access info:
