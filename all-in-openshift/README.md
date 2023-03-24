@@ -10,7 +10,7 @@ The architecture can be illustrated as below:
 
 ### The Tools
 
-A series tools will be needed, on the laptop of VM where you run the scripts, which include:
+A series of tools will be needed, on the laptop or the VM where you run the scripts, which include:
 - `oc`
 - `kubectl`
 - `openssl`
