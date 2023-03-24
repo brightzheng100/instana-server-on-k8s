@@ -162,6 +162,9 @@ check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubec
 exposing-instana-server-servies
 ```
 
+> Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes.
+> What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
+
 ### 4. How to access?
 
 Once you've gone through all above steps successfully, the Instana should have been deployed.
