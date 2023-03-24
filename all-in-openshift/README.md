@@ -1,4 +1,4 @@
-# Deploying Instana on OpenShift Cluter
+# Deploying Instana on OpenShift Cluster
 
 This repository guides you through how to set up Instana on an OpenShift cluster.
 
