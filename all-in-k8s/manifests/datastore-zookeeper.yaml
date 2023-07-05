@@ -1,0 +1,22 @@
+apiVersion: "zookeeper.pravega.io/v1beta1"
+kind: "ZookeeperCluster"
+metadata:
+  name: instana-zookeeper
+  namespace: instana-clickhouse
+spec:
+  # Ref: https://github.com/pravega/zookeeper-operator
+  replicas: 1
+  config:
+    tickTime: 2000
+    initLimit: 10
+    syncLimit: 5
+    maxClientCnxns: 0
+    autoPurgeSnapRetainCount: 20
+    autoPurgePurgeInterval: 1
+  persistence:
+    reclaimPolicy: Delete
+    spec:
+      storageClassName: "${DATASTORE_STORAGE_CLASS_ZOOKEEPER}"
+      resources:
+        requests:
+          storage: "${DATASTORE_SIZE_ZOOKEEPER}"

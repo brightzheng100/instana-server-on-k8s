@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: instana-core
+  name: exposed-acceptor
+spec:
+  type: NodePort
+  ports:
+    - name: http-service
+      port: 443
+      protocol: TCP
+      targetPort: http-service
+      nodePort: ${INSTANA_EXPOSED_PORT_ACCEPTOR}
+  selector:
+    app.kubernetes.io/name: instana
+    app.kubernetes.io/component: acceptor
+    instana.io/group: service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: instana-core
+  name: exposed-gateway
+spec:
+  type: NodePort
+  ports:
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+      nodePort: ${INSTANA_EXPOSED_PORT}
+  selector:
+    app.kubernetes.io/name: instana
+    app.kubernetes.io/component: gateway
+    instana.io/group: service

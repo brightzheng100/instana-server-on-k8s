@@ -38,7 +38,7 @@ Refer to [single-node-k8s/README.md](./single-node-k8s/README.md).
 
 ## Deploying Instana on K8s
 
-TODO
+Refer to [all-in-k8s/README.md](./all-in-k8s/README.md).
 
 
 ## Deploying Instana on OpenShift

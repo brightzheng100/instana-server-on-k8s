@@ -1,0 +1,95 @@
+# The initial password for the admin user
+adminPassword:
+# Diffie-Hellman parameters to use
+dhParams:
+# The download key you received from us
+downloadKey:
+# The sales key you received from us
+salesKey:
+# Seed for creating crypto tokens. Pick a random 12 char string
+tokenSecret: mytokensecret
+# Configuration for raw spans storage
+#rawSpansStorageConfig:
+  # Required if using S3 or compatible and credentials should be configured.
+  # Not required if using IRSA on EKS.
+  #s3Config:
+    #accessKeyId: ...
+    #secretAcessKey: ...
+  # Required if using Google Cloud Storage and credentials should be configured.
+  # Not required if using GKE with workload identity.
+  #gcloudConfig:
+    #serviceAccountKey: ...
+# SAML/OIDC configuration
+serviceProviderConfig:
+  # Password for the key/cert file
+  keyPassword: "${INSTANA_KEY_PASSPHRASE}"
+  # The combined key/cert file
+  pem:
+# Required if a proxy is configured that needs authentication
+#proxyConfig:
+  # Proxy user
+  #user: myproxyuser
+  # Proxy password
+  #password: my proxypassword
+#emailConfig:
+  # Required if SMTP is used for sending e-mails and authentication is required
+  #smtpConfig:
+  #  user: mysmtpuser
+  #  password: mysmtppassword
+  # Required if using for sending e-mail and credentials should be configured.
+  # Not required if using IRSA on EKS.
+  #sesConfig:
+  #  accessKeyId: ...
+  #  secretAcessKey: ...
+
+# NOTE: the passwords will be dynamically replaced with actual value
+# Refer to scripts/12-init-instana.sh function "installing-instana-server-secret-instana-core"
+datastoreConfigs: 
+  cassandraConfigs:
+    - keyspaces:
+        - profiles
+        - spans
+        - metrics
+        - state
+      user: instana-superuser
+      # kubectl get secret instana-superuser -n instana-cassandra --template='{{index .data.password | base64decode}}'
+      password: "--WILL BE UPDATED BY SCRIPTS--"
+      adminUser: instana-superuser
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+  clickhouseConfigs:
+    - schemas:
+        - application
+        - logs
+      user: clickhouse-user
+      password: "--WILL BE UPDATED BY SCRIPTS--"
+      adminUser: clickhouse-user
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+  elasticsearchConfig:
+    user: elastic
+    # kubectl get secret instana-elasticsearch-es-elastic-user -n instana-elasticsearch --template='{{index .data.elastic | base64decode}}'
+    password: "--WILL BE UPDATED BY SCRIPTS--"
+    adminUser: elastic
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+  kafkaConfig:
+    adminUser: kafka-user
+    # kubectl get secret kafka-user -n instana-kafka --template='{{index .data.password | base64decode}}'
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+    consumerUser: kafka-user
+    consumerPassword: "--WILL BE UPDATED BY SCRIPTS--"
+    producerUser: kafka-user
+    producerPassword: "--WILL BE UPDATED BY SCRIPTS--"
+  postgresConfigs:
+    - databases:
+        - butlerdb
+        - tenantdb
+        - sales
+      user: postgres
+      # kubectl get secret postgres.instana-postgres.credentials.postgresql.acid.zalan.do -n instana-postgres --template='{{index .data.password | base64decode}}'
+      password: "--WILL BE UPDATED BY SCRIPTS--" 
+      adminUser: postgres
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+  beeInstanaConfig:
+    user: bee
+    password: "--WILL BE UPDATED BY SCRIPTS--"
+    adminUser: bee
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"

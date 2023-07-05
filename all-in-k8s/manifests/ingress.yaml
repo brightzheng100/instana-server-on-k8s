@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: instana
+  namespace: instana-core
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - ${INSTANA_EXPOSED_FQDN}
+    secretName: instana-tls
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/(.*)"
+        backend:
+          service:
+            name: gateway
+            port:
+              name: https
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/(.*)"
+        backend:
+          service:
+            name: acceptor
+            port:
+              name: http-service
+
