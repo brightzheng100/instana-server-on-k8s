@@ -13,4 +13,7 @@ bootstrapping-k8s
 progress-bar 1
 
 getting-ready-k8s
+
 installing-k8s-cni
+
+installing-tools

@@ -89,8 +89,12 @@ export INSTANA_ADMIN_PWD=MyCoolPassword
 Or, to use another desired version of Instana, if available, do something like this:
 
 ```sh
-export INSTANA_VERSION=243-5
+export INSTANA_VERSION="251-0-1"
 ```
+
+> Note: The versioning pattern may be different in different OS'es. For example:
+> - On Ubuntu: 251-0-1
+> - On RHEL: 251_0-1
 
 Now, the preparation is done, and let's get started!
 
