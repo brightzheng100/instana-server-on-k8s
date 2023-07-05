@@ -70,7 +70,7 @@ cd instana-server-on-k8s/single-node-k8s
 mkdir _wip
 
 # Export required environment variables
-export INSTANA_EXPOSED_FQDN="<THE FQDN, e.g. simply IP, or instana.<IP>.nip.io, or instana.mydomain.com>"
+export INSTANA_EXPOSED_FQDN="<THE FQDN, e.g. 20.26.139.84.nip.io>"
 export INSTANA_AGENT_KEY="<THE LICENSE'S AGENT KEY>"
 export INSTANA_DOWNLOAD_KEY="<THE LICENSE'S DOWNLOAD KEY>"
 export INSTANA_SALES_KEY="<THE LICENSE'S SALES KEY>"
