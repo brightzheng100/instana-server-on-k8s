@@ -106,3 +106,44 @@ function installing-k8s-cni {
   
   logme "$color_green" "DONE"
 }
+
+### Installing Instana tools: Kubectl plugin, yq, helm
+function installing-tools {
+  echo "----> installing-tools"
+
+  # Instana kubectl plugin
+  logme "$color_green" "Instana kubectl plugin..."
+  cat << EOF | sudo tee /etc/yum.repos.d/instana.repo
+[instana-product]
+name=Instana-Product
+baseurl=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/rel-rpm-public-virtual/
+enabled=1
+gpgcheck=0
+gpgkey=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/api/security/keypair/public/repositories/rel-rpm-public-virtual
+repo_gpgcheck=1
+EOF
+  sudo dnf makecache -y
+  #sudo dnf --showduplicates list instana-kubectl
+  sudo dnf install -y instana-kubectl-${INSTANA_VERSION}
+  sudo dnf install python3-dnf-plugin-versionlock -y
+  sudo dnf versionlock add instana-console-${INSTANA_VERSION}
+  logme "$color_green" "`kubectl instana --version`"
+
+  logme "$color_green" "Instana kubectl plugin - DONE"
+
+  # yq
+  logme "$color_green" "yq..."
+  curl -sSL --output _wip/yq_linux_amd64 https://github.com/mikefarah/yq/releases/download/v4.31.2/yq_linux_amd64
+  chmod +x _wip/yq_linux_amd64
+  sudo mv _wip/yq_linux_amd64 /usr/local/bin/yq
+  
+  logme "$color_green" "yq - DONE"
+
+  # helm
+  curl -fsSL -o _wip/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+  chmod 700 _wip/get_helm.sh
+  ./_wip/get_helm.sh
+
+  # jq
+  #sudo dnf install jq -y
+}

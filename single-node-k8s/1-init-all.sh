@@ -19,12 +19,14 @@ case $ID in
     ;;
   ubuntu) 
     # Ubuntu
-    logme "$color_red" "!!! Unsupported OS detected: Ubuntu !!!"
-    return 0
+    logme "$color_green" "RHEL OS detected"
+    source ./scripts/11-init-k8s-rhel.sh
+    source ./scripts/11-init-k8s-ubuntu.sh
     ;;
   *) 
     # Others
     logme "$color_red" "!!! Unsupported OS detected: $ID !!!"
+    return 0
     ;;
 esac
 

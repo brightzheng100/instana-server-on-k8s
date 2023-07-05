@@ -2,11 +2,6 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: instana-zookeeper
----
-apiVersion: v1
-kind: Namespace
-metadata:
   name: instana-kafka
 ---
 apiVersion: v1

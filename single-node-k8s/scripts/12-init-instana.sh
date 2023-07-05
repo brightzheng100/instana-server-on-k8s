@@ -1,46 +1,5 @@
 #!/bin/bash
 
-### Installing Instana tools: Kubectl plugin, yq, helm
-function installing-tools {
-  echo "----> installing-tools"
-
-  # Instana kubectl plugin
-  logme "$color_green" "Instana kubectl plugin..."
-  cat << EOF | sudo tee /etc/yum.repos.d/instana.repo
-[instana-product]
-name=Instana-Product
-baseurl=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/rel-rpm-public-virtual/
-enabled=1
-gpgcheck=0
-gpgkey=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/api/security/keypair/public/repositories/rel-rpm-public-virtual
-repo_gpgcheck=1
-EOF
-  sudo dnf makecache -y
-  #sudo dnf --showduplicates list instana-kubectl
-  sudo dnf install -y instana-kubectl-${INSTANA_VERSION}
-  sudo dnf install python3-dnf-plugin-versionlock -y
-  sudo dnf versionlock add instana-console-${INSTANA_VERSION}
-  logme "$color_green" "`kubectl instana --version`"
-
-  logme "$color_green" "Instana kubectl plugin - DONE"
-
-  # yq
-  logme "$color_green" "yq..."
-  curl -sSL --output _wip/yq_linux_amd64 https://github.com/mikefarah/yq/releases/download/v4.31.2/yq_linux_amd64
-  chmod +x _wip/yq_linux_amd64
-  sudo mv _wip/yq_linux_amd64 /usr/local/bin/yq
-  
-  logme "$color_green" "yq - DONE"
-
-  # helm
-  curl -fsSL -o _wip/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-  chmod 700 _wip/get_helm.sh
-  ./_wip/get_helm.sh
-
-  # jq
-  #sudo dnf install jq -y
-}
-
 ### Creating namespaces
 function creating-namespaces {
   echo "----> creating-namespaces"
@@ -130,7 +89,7 @@ function installing-datastore-cassandra {
     --version=0.40.0
     #--set=global.clusterScoped=true \
 
-  sleep 5
+  progress-bar 2
 
   envsubst < manifests/datastore-cassandra.yaml | kubectl apply -f -
 
@@ -262,6 +221,7 @@ function installing-instana-server-secret-instana-core {
     .downloadKey = \"${INSTANA_DOWNLOAD_KEY}\" |
     .salesKey = \"${INSTANA_SALES_KEY}\" |
     .serviceProviderConfig.keyPassword = \"${sp_keyPassword}\" |
+    .serviceProviderConfig.pem = \"${sp_pem}\" |
     .datastoreConfigs.cassandraConfigs.[0].password = \"${cassandra_password}\" |
     .datastoreConfigs.cassandraConfigs.[0].adminPassword = \"${cassandra_password}\" |
     .datastoreConfigs.clickhouseConfigs.[0].password = \"${clickhouse_password}\" |

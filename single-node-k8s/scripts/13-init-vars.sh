@@ -4,9 +4,18 @@
 
 echo "========: Exporting & checking environment variables"
 
-export_var_with_default "K8S_VERSION"               "1.26.3"
-export_var_with_default "CRIO_VERSION"              "1.26"
-export_var_with_default "CALICO_MANIFEST_FILE"      "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
+case $ID in
+  ubuntu) 
+    # Ubuntu
+    export_var_with_default "K8S_VERSION"                       "1.26.3-00"
+    ;;
+  *) 
+    # Others
+    export_var_with_default "K8S_VERSION"                       "1.26.3"
+    ;;
+esac
+export_var_with_default "CRIO_VERSION"                          "1.26"
+export_var_with_default "CALICO_MANIFEST_FILE"                  "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
 
 
 ######### environment variables required by Instana installation section
@@ -23,8 +32,8 @@ export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_DATA"        "10Gi"
 export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_LOG"         "1Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE"    "local-path"
 
-#export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_ZK"          "2Gi"
-#export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE_ZK" "local-path"
+export_var_with_default "DATASTORE_SIZE_ZOOKEEPER"              "10Gi"
+export_var_with_default "DATASTORE_STORAGE_CLASS_ZOOKEEPER"     "local-path"
 
 export_var_with_default "DATASTORE_SIZE_ELASTICSEARCH"          "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_ELASTICSEARCH" "local-path"
@@ -40,10 +49,17 @@ export_var_with_default "DATASTORE_STORAGE_CLASS_POSTGRES"      "local-path"
 export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "local-path"
 
-export_var_with_default "DATASTORE_SIZE_ZOOKEEPER"              "10Gi"
-export_var_with_default "DATASTORE_STORAGE_CLASS_ZOOKEEPER"     "local-path"
+case $ID in
+  ubuntu) 
+    # Ubuntu
+    export_var_with_default "INSTANA_VERSION"                   "251-0-1"
+    ;;
+  *) 
+    # Others
+    export_var_with_default "INSTANA_VERSION"                   "251_0-1"
+    ;;
+esac
 
-export_var_with_default "INSTANA_VERSION"                       "251_0-1"
 
 quit_when_var_not_set   "INSTANA_EXPOSED_FQDN"
 #quit_when_var_not_set   "INSTANA_EXPOSED_PORT"

@@ -19,6 +19,7 @@ The VM should meet these minimum specs:
 
 Tested Operating Systems, on `amd64` / `x86_64` arch:
 - RHEL 8.x
+- Ubuntu 20.04
 
 > Note: the total of default memory requests exceeds **64G** so I've scaled down some components to fit into above specs. Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
 
@@ -39,7 +40,7 @@ $ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
 
 ### Tools
 
-A series tools will be installed automatically, which include:
+A series of tools will be installed automatically, which include:
 - `kubelet`, with configurable version
 - `kubeadm`, with configurable version
 - `kubectl`, with configurable version
@@ -120,7 +121,10 @@ bootstrapping-k8s
 progress-bar 1
 
 getting-ready-k8s
+
 installing-k8s-cni
+
+installing-tools
 ```
 
 ### 3. Install Instana
@@ -135,7 +139,6 @@ But, I'd highly recommend you do it step by step so you have better chance to tr
 So, run below commands, well, custom functions actually, one by one instead:
 
 ```sh
-installing-tools
 creating-namespaces
 installing-local-path-provisioner
 
@@ -149,7 +152,7 @@ installing-datastore-postgres
 installing-datastore-cassandra
 installing-datastore-clickhouse
 
-installing-beainstana
+installing-beeinstana
 # check before proceeding: wait 10 mins for expected 4 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
@@ -161,8 +164,8 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 15 mins for expected 23 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 23 "kubectl get pod -n instana-core"
+# check before proceeding: wait 15 mins for expected 22 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
