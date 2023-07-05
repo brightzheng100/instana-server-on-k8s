@@ -6,6 +6,8 @@ The architecture can be illustrated as below:
 
 ![Architecture of Instana Server](./misc/architecture.png)
 
+
+
 ## Prerequisites
 
 ### The VM specs
@@ -18,18 +20,20 @@ The VM should meet these minimum specs:
 Tested Operating Systems, on `amd64` / `x86_64` arch:
 - RHEL 8.x
 
-> Note: the total of default memory requests exceeds **64G** so I've scaled down some components to fit into above specs. Refer to [`manifests/datastores-cr.yaml`](./manifests/datastores-cr.yaml) and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
+> Note: the total of default memory requests exceeds **64G** so I've scaled down some components to fit into above specs. Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
 
 The resource utilization can be referred to below output -- so the RAM with 64G is at risk:
 
 ```sh
-$ kubectl describe no/itzvsi-550004ghs4-dv3hyjx3
+$ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
 ...
-  Resource           Requests       Limits
-  --------           --------       ------
-  cpu                11700m (73%)   14 (87%)
-  memory             59220Mi (92%)  75535Mi (117%)
-...
+  Resource           Requests          Limits
+  --------           --------          ------
+  cpu                12350m (77%)      8100m (50%)
+  memory             55551012Ki (84%)  87892004Ki (133%)
+  ephemeral-storage  0 (0%)            0 (0%)
+  hugepages-1Gi      0 (0%)            0 (0%)
+  hugepages-2Mi      0 (0%)            0 (0%)
 ```
 
 
@@ -87,13 +91,15 @@ Or, to use another desired version of Instana, if available, do something like t
 export INSTANA_VERSION=243-5
 ```
 
-Now, let's get started!
+Now, the preparation is done, and let's get started!
+
 
 ### 1. Init it
 
 ```sh
 source 1-init-all.sh
 ```
+
 
 ### 2. Spin up K8s
 
@@ -137,22 +143,28 @@ installing-cert-manager
 # check before proceeding: wait 5 mins for expected 3 pods
 check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
 
+installing-datastore-kafka
+installing-datastore-elasticsearch
+installing-datastore-postgres
+installing-datastore-cassandra
+installing-datastore-clickhouse
+
+installing-beainstana
+# check before proceeding: wait 10 mins for expected 4 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
+
 installing-instana-operator
 
-installing-instana-datastores
-# check before proceeding: wait 10 mins for expected 8 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-datastores" 10 8 "kubectl get pod -n instana-datastores"
+installing-instana-server-secret-image-pullsecret
+installing-instana-server-secret-instana-core
+installing-instana-server-secret-instana-tls
+installing-instana-server-secret-tenant0-unit0
 
-installing-instana-server-components-secret-image-pullsecret
-installing-instana-server-components-secret-instana-core
-installing-instana-server-components-secret-instana-tls
-installing-instana-server-components-secret-tenant0-unit0
+installing-instana-server-core
+# check before proceeding: wait 15 mins for expected 23 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 23 "kubectl get pod -n instana-core"
 
-installing-instana-server-components-core
-# check before proceeding: wait 10 mins for expected 20 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 20 "kubectl get pod -n instana-core"
-
-installing-instana-server-components-unit
+installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
@@ -168,6 +180,6 @@ Now, you can print out the access info:
 how-to-access-instana
 ```
 
-## The step-by-step guide
+## The Scripts & YAML files
 
-If you're curious enough, check out the [detailed guide](./README-DETAILED.md) for the steps.
+If you really want do dive deeper into the details, please check out the scripts and YAML files accordingly.

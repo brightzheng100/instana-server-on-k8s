@@ -14,22 +14,28 @@ installing-cert-manager
 # check before proceeding: wait 5 mins for expected 3 pods
 check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
 
+installing-datastore-kafka
+installing-datastore-elasticsearch
+installing-datastore-postgres
+installing-datastore-cassandra
+installing-datastore-clickhouse
+
+installing-beainstana
+# check before proceeding: wait 10 mins for expected 4 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
+
 installing-instana-operator
 
-installing-instana-datastores
-# check before proceeding: wait 10 mins for expected 8 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-datastores" 10 8 "kubectl get pod -n instana-datastores"
+installing-instana-server-secret-image-pullsecret
+installing-instana-server-secret-instana-core
+installing-instana-server-secret-instana-tls
+installing-instana-server-secret-tenant0-unit0
 
-installing-instana-server-components-secret-image-pullsecret
-installing-instana-server-components-secret-instana-core
-installing-instana-server-components-secret-instana-tls
-installing-instana-server-components-secret-tenant0-unit0
+installing-instana-server-core
+# check before proceeding: wait 15 mins for expected 23 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 23 "kubectl get pod -n instana-core"
 
-installing-instana-server-components-core
-# check before proceeding: wait 10 mins for expected 20 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 10 20 "kubectl get pod -n instana-core"
-
-installing-instana-server-components-unit
+installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 

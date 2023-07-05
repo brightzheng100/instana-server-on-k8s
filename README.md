@@ -5,7 +5,7 @@ Instana offers SaaS by default, and also offers flexible non-SaaS deployment pat
 In this repo, I've hosted some deployment experiments, focusing on how to deploy Instana on K8s, be it vanilla Kubernetes or commercial distributions like Red Hat OpenShift, for learning and maybe POC purposes.
 
 > Note: 
-> 1. This is NOT an official guide for how to deploy Instana on Kubernetes. Instead, this is just a sharing of my (Bright Zheng) own experiments. Instana is very agile with bi-weekly release cadence for SaaS and monthly for on-prem, so try this "unofficial" stuff with luck and please always refer to official docs.
+> 1. This is NOT an official guide for how to deploy Instana on Kubernetes. Instead, this is just a sharing of my (Bright Zheng) own experiments. Instana is very agile with bi-weekly release cadence for SaaS and monthly for on-prem, so try this "unofficial" stuff with luck and please always refer to the official docs.
 > 2. These experiments are not meant for production, at all.
 
 
@@ -16,10 +16,8 @@ There are some concepts like "modularization" and "reusability" and I like them,
 Very simple, I built the `single-node-k8s` first and try to reuse what I've built with necesary "overlay" code/scripts, so:
 
 ```
-all-in-openshift
-all-in-openshift-with-3rd-operators(WIP)
-all-in-k8s(WIP)
-all-in-k8s-with-3rd-operators(WIP)
+all-in-k8s (REVIEW IN PROGRESS)
+all-in-openshift (REVIEW IN PROGRESS)
 
       |
       |
@@ -37,21 +35,16 @@ Actually, there are only very few changes needed to make on top of the `single-n
 
 Refer to [single-node-k8s/README.md](./single-node-k8s/README.md).
 
-## Deploying Instana on OpenShift
-
-Refer to [all-in-openshift/README.md](./all-in-openshift/README.md).
-
-## Deploying Instana on OpenShift with 3rd Party Operators
-
-TODO
 
 ## Deploying Instana on K8s
 
 TODO
 
-## Deploying Instana on K8s with 3rd Party Operators
 
-TODO
+## Deploying Instana on OpenShift
+
+Refer to [all-in-openshift/README.md](./all-in-openshift/README.md).
+
 
 ## Deploying Instana on a "hybrid" env: ROKS + VM-based Datastores
 

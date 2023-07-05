@@ -8,8 +8,10 @@ spec:
     # Host for the agent acceptor. eg: agent.instana.<xxxx.nip.io>
     host: "agent.${INSTANA_EXPOSED_FQDN}"
     port: ${INSTANA_EXPOSED_PORT_ACCEPTOR}
+
   # Base domain for Instana. eg: instana.<xxxx.nip.io>
   baseDomain: "${INSTANA_EXPOSED_FQDN}"
+
   # ComponentConfig to override components' defaults, especially resources
   componentConfigs:
     - name: acceptor
@@ -67,7 +69,7 @@ spec:
   # DatastoreConfigs
   datastoreConfigs:
     cassandraConfigs:
-      - hosts: [ default-cassandra.instana-datastores ] 
+      - hosts: [ instana-instana-cassandra-service.instana-cassandra ]
         ports:
           - name: tcp
             port: 9042
@@ -78,7 +80,7 @@ spec:
           - state
         authEnabled: true
     clickhouseConfigs:
-      - hosts: [ default-clickhouse.instana-datastores ] 
+      - hosts: [ chi-instana-clickhouse-local-0-0.instana-clickhouse ]
         ports:
           - name: tcp
             port: 9000
@@ -86,10 +88,11 @@ spec:
             port: 8123
         schemas:
           - application
+          - logs
         clusterName: local
         authEnabled: true
     elasticsearchConfig:
-      hosts: [ default-elasticsearch.instana-datastores ] 
+      hosts: [ instana-elasticsearch-es-http.instana-elasticsearch ]
       ports:
         - name: tcp
           port: 9300
@@ -98,13 +101,14 @@ spec:
       clusterName: onprem_onprem
       authEnabled: true
     kafkaConfig:
-      hosts: [ default-kafka.instana-datastores ]
+      hosts: [ instana-kafka-kafka-bootstrap.instana-kafka ]
       ports:
         - name: tcp
           port: 9092
       authEnabled: true
+      saslMechanism: SCRAM-SHA-512
     postgresConfigs:
-      - hosts: [ default-postgres.instana-datastores ] 
+      - hosts: [ instana-postgres.instana-postgres ]
         ports:
           - name: tcp
             port: 5432
@@ -114,10 +118,11 @@ spec:
           - sales
         authEnabled: true
     beeInstanaConfig:
-      hosts: [ default-beeInstana.instana-datastores ] 
+      hosts: [ aggregators.instana-beeinstana ]  
       ports:
         - name: tcp
           port: 9998
+      clustered: true
       authEnabled: true
   # Storage configs
   storageConfigs:
@@ -150,7 +155,7 @@ spec:
       port: 465
       useSSL: false
   imageConfig:
-    registry: containers.instana.io
+    registry: artifact-public.instana.io
   resourceProfile: small
   imagePullSecrets:
     - name: instana-registry

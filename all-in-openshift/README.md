@@ -1,6 +1,6 @@
 # Deploying Instana on OpenShift Cluster
 
-This repository guides you through how to set up Instana on an OpenShift cluster.
+This repository guides you through how to set up Instana on an OpenShift cluster, with built-in `Datastores` CRD for building the datastore components.
 
 The architecture can be illustrated as below:
 

@@ -1,7 +1,40 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: instana-datastores
+  name: instana-zookeeper
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-kafka
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-elasticsearch
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-postgres
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-cassandra
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-clickhouse
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: instana-beeinstana
+
 ---
 apiVersion: v1
 kind: Namespace

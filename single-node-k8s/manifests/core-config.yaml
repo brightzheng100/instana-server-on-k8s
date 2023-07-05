@@ -41,6 +41,9 @@ serviceProviderConfig:
   #sesConfig:
   #  accessKeyId: ...
   #  secretAcessKey: ...
+
+# NOTE: the passwords will be dynamically replaced with actual value
+# Refer to scripts/12-init-instana.sh function "installing-instana-server-secret-instana-core"
 datastoreConfigs: 
   cassandraConfigs:
     - keyspaces:
@@ -48,38 +51,45 @@ datastoreConfigs:
         - spans
         - metrics
         - state
-      user: cassandra
-      password: cassandra
-      adminUser: cassandra
-      adminPassword: cassandra
+      user: instana-superuser
+      # kubectl get secret instana-superuser -n instana-cassandra --template='{{index .data.password | base64decode}}'
+      password: "--WILL BE UPDATED BY SCRIPTS--"
+      adminUser: instana-superuser
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
   clickhouseConfigs:
     - schemas:
         - application
-      user: clickhouse_user
-      password: clickhouse_pass
-      adminUser: clickhouse_user
-      adminPassword: clickhouse_pass
+        - logs
+      user: clickhouse-user
+      password: "--WILL BE UPDATED BY SCRIPTS--"
+      adminUser: clickhouse-user
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
   elasticsearchConfig:
-    user: elasticsearch_user
-    password: elasticsearch_pass
-    adminUser: elasticsearch_user
-    adminPassword: elasticsearch_pass
+    user: elastic
+    # kubectl get secret instana-elasticsearch-es-elastic-user -n instana-elasticsearch --template='{{index .data.elastic | base64decode}}'
+    password: "--WILL BE UPDATED BY SCRIPTS--"
+    adminUser: elastic
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
   kafkaConfig:
-    adminUser: kafka_user
-    adminPassword: kafka_pass
-    consumerUser: kafka_user
-    consumerPassword: kafka_pass
-    producerUser: kafka_user
-    producerPassword: kafka_pass
+    adminUser: kafka-user
+    # kubectl get secret kafka-user -n instana-kafka --template='{{index .data.password | base64decode}}'
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
+    consumerUser: kafka-user
+    consumerPassword: "--WILL BE UPDATED BY SCRIPTS--"
+    producerUser: kafka-user
+    producerPassword: "--WILL BE UPDATED BY SCRIPTS--"
   postgresConfigs:
     - databases:
         - butlerdb
         - tenantdb
         - sales
-      user: postgres_user
-      password: postgres_pass
-      adminUser: postgres_user
-      adminPassword: postgres_pass
+      user: postgres
+      # kubectl get secret postgres.instana-postgres.credentials.postgresql.acid.zalan.do -n instana-postgres --template='{{index .data.password | base64decode}}'
+      password: "--WILL BE UPDATED BY SCRIPTS--" 
+      adminUser: postgres
+      adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
   beeInstanaConfig:
-    user: bee_user
-    password: bee_pass
+    user: bee
+    password: "--WILL BE UPDATED BY SCRIPTS--"
+    adminUser: bee
+    adminPassword: "--WILL BE UPDATED BY SCRIPTS--"
