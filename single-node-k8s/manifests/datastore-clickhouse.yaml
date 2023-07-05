@@ -76,12 +76,16 @@ spec:
         spec:
           containers:
             - name: instana-clickhouse
-              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:22.3.15.33-1-lts-ibm_v0.16.0
+              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:22.3.19.6-3-lts-ibm_v0.26.1
               command:
                 - clickhouse-server
                 - --config-file=/etc/clickhouse-server/config.xml
           imagePullSecrets:
             - name: instana-registry
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 1001
     volumeClaimTemplates:
       - name: instana-clickhouse-data-volume
         spec:

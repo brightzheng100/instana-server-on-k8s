@@ -82,6 +82,10 @@ spec:
                 - --config-file=/etc/clickhouse-server/config.xml
           imagePullSecrets:
             - name: instana-registry
+          securityContext:
+            fsGroup: 0
+            runAsGroup: 0
+            runAsUser: 1001
     volumeClaimTemplates:
       - name: instana-clickhouse-data-volume
         spec:
