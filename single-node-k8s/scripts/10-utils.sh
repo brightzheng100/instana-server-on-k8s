@@ -81,7 +81,7 @@ function quit_when_var_not_set() {
 
   if [[ -z "$var_value" ]]; then 
     logme "$color_red"  "You must explictly export this variable: $1"
-    return 0;
+    return 0
   fi
 }
 
@@ -172,7 +172,7 @@ function check-namespaced-pod-status {
 
     if [[ "$finished" == "false" ]]; then
         logme "$color_red" "Hmm, timeout after retrying in $timeout_min mins!"
-        exit 99
+        return 1
     fi
 }
 
@@ -228,7 +228,7 @@ function check-namespaced-pod-status-and-keep-displaying-info {
 
     if [[ "$finished" == "false" ]]; then
         logme "$color_red" "Hmm, timeout after retrying in $timeout_min mins!"
-        exit 99
+        return 1
     fi
 }
 

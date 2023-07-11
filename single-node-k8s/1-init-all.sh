@@ -7,19 +7,21 @@ source /etc/os-release
 case $ID in
   rhel) 
     # RHEL
+    logme "$color_green" "RHEL OS detected"
     #logme "$color_green" "RHEL OS detected"
     #logme "$color_green" "source ./scripts/11-init-k8s-rhel.sh"
     source ./scripts/11-init-k8s-rhel.sh
     ;;
   centos) 
     # CentOS
+    logme "$color_green" "CentOS OS detected"
     #logme "$color_green" "CentOS OS detected, which SHOUD work but haven't fully tested."
     #logme "$color_green" "source ./scripts/11-init-k8s-rhel.sh"
     source ./scripts/11-init-k8s-rhel.sh
     ;;
   ubuntu) 
     # Ubuntu
-    logme "$color_green" "RHEL OS detected"
+    logme "$color_green" "Ubuntu OS detected"
     source ./scripts/11-init-k8s-rhel.sh
     source ./scripts/11-init-k8s-ubuntu.sh
     ;;

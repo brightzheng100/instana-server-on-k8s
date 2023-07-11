@@ -6,7 +6,6 @@ source ./1-init-all.sh
 ## Let's orchestrate the process here for Instana
 echo "#################################################"
 
-installing-tools
 creating-namespaces
 installing-local-path-provisioner
 
@@ -33,7 +32,7 @@ installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
 # check before proceeding: wait 15 mins for expected 22 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 22 "kubectl get pod -n instana-core"
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods

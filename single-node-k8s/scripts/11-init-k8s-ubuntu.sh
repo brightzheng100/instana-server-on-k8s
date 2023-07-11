@@ -4,7 +4,7 @@
 
 ### Installing K8s tools
 function installing-k8s-tools {
-  echo "----> installing-k8s-tools"
+  logme "$color_green" "----> installing-k8s-tools"
 
   sudo apt-get install -y ca-certificates curl
 
@@ -31,7 +31,7 @@ function installing-k8s-tools {
 
 ### Installing K8s CRI with CRI-O
 function installing-k8s-cri {
-  echo "----> installing-k8s-cri"
+  logme "$color_green" "----> installing-k8s-cri"
 
   # As per the official doc (https://cri-o.io/), there are different path for different Ubuntu version, sigh!
   OS="Debian_Unstable"
@@ -44,7 +44,7 @@ function installing-k8s-cri {
   elif [[ $(lsb_release -rs) == "20.04" ]]; then
     OS="xUbuntu_20.04"
   fi
-  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" | sudo tee  
+  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
   echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.list
   curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/Release.key | sudo apt-key add -
   curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add -
@@ -67,7 +67,7 @@ function installing-k8s-cri {
 
 ### Installing Instana tools: Kubectl plugin, yq, helm
 function installing-tools {
-  echo "----> installing-tools"
+  logme "$color_green" "----> installing-tools"
 
   # Instana kubectl plugin
   logme "$color_green" "Instana kubectl plugin..."
@@ -79,9 +79,6 @@ machine artifact-public.instana.io
   login _
   password ${INSTANA_AGENT_KEY}
 EOF
-
-  wget -O- --user=_ --password="${INSTANA_AGENT_KEY}" https://artifact-public.instana.io/artifactory/api/security/keypair/public/repositories/rel-debian-public-virtual \
-    | sudo gpg --dearmor -o /usr/share/keyrings/instana-archive-keyring.gpg
 
   sudo apt-get update -y
   # Check the available candidates by:

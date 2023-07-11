@@ -2,7 +2,7 @@
 
 ### Installing K8s tools
 function installing-k8s-tools {
-  echo "----> installing-k8s-tools"
+  logme "$color_green" "----> installing-k8s-tools"
 
   # Add K8s repo
   cat <<'EOF' | sudo tee /etc/yum.repos.d/kubernetes.repo
@@ -33,7 +33,7 @@ EOF
 
 ### Installing K8s CRI with CRI-O
 function installing-k8s-cri {
-  echo "----> installing-k8s-cri"
+  logme "$color_green" "----> installing-k8s-cri"
 
   sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
   sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION/CentOS_8/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.repo
@@ -48,7 +48,7 @@ function installing-k8s-cri {
 
 ### Bootstrapping K8s
 function bootstrapping-k8s {
-  echo "----> bootstrapping-k8s"
+  logme "$color_green" "----> bootstrapping-k8s"
 
   # 1. Disable the swap. To make it permanent, update the /etc/fstab and comment/remove the line with swap
   #   sudo vi /etc/fstab
@@ -85,7 +85,7 @@ EOF
 
 ### Getting ready with K8s
 function getting-ready-k8s {
-  echo "----> getting-ready-k8s"
+  logme "$color_green" "----> getting-ready-k8s"
 
   # Copy over the kube config for admin access
   mkdir -p $HOME/.kube
@@ -100,7 +100,7 @@ function getting-ready-k8s {
 
 ### Installing K8s CNI with Calico
 function installing-k8s-cni {
-  echo "----> installing-k8s-cni"
+  logme "$color_green" "----> installing-k8s-cni"
 
   kubectl apply -f "${CALICO_MANIFEST_FILE}"
   
@@ -109,7 +109,7 @@ function installing-k8s-cni {
 
 ### Installing Instana tools: Kubectl plugin, yq, helm
 function installing-tools {
-  echo "----> installing-tools"
+  logme "$color_green" "----> installing-tools"
 
   # Instana kubectl plugin
   logme "$color_green" "Instana kubectl plugin..."

@@ -2,7 +2,7 @@
 
 ### Creating namespaces
 function creating-namespaces {
-  echo "----> creating-namespaces"
+  logme "$color_green" "----> creating-namespaces"
 
   kubectl apply -f manifests/namespaces.yaml
   logme "$color_green" "DONE"
@@ -10,7 +10,7 @@ function creating-namespaces {
 
 ### Installing local-path-provisioner
 function installing-local-path-provisioner {
-  echo "----> installing-local-path-provisioner"
+  logme "$color_green" "----> installing-local-path-provisioner"
 
   kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.23/deploy/local-path-storage.yaml
 
@@ -21,7 +21,7 @@ function installing-local-path-provisioner {
 
 ### Installing Cert Manager
 function installing-cert-manager {
-  echo "----> installing-cert-manager"
+  logme "$color_green" "----> installing-cert-manager"
 
   # Installing Cert Manager
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
@@ -31,7 +31,7 @@ function installing-cert-manager {
 
 ### Installing Datastore Kafka
 function installing-datastore-kafka {
-  echo "----> installing-datastore-kafka"
+  logme "$color_green" "----> installing-datastore-kafka"
 
   # Ref: https://github.com/strimzi/strimzi-kafka-operator/tree/main/helm-charts/helm3/strimzi-kafka-operator
   helm repo add strimzi https://strimzi.io/charts/
@@ -47,7 +47,7 @@ function installing-datastore-kafka {
 
 ### Installing Datastore ElasticSearch
 function installing-datastore-elasticsearch {
-  echo "----> installing-datastore-elasticsearch"
+  logme "$color_green" "----> installing-datastore-elasticsearch"
 
   # Ref: https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-stack-helm-chart.html
   helm repo add elastic https://helm.elastic.co
@@ -63,7 +63,7 @@ function installing-datastore-elasticsearch {
 
 ### Installing Datastore Postgres
 function installing-datastore-postgres {
-  echo "----> installing-datastore-postgres"
+  logme "$color_green" "----> installing-datastore-postgres"
 
   # Ref: https://github.com/zalando/postgres-operator/blob/master/charts/postgres-operator/values.yaml
   helm repo add postgres https://opensource.zalando.com/postgres-operator/charts/postgres-operator
@@ -80,7 +80,7 @@ function installing-datastore-postgres {
 
 ### Installing Datastore Cassandra
 function installing-datastore-cassandra {
-  echo "----> installing-datastore-cassandra"
+  logme "$color_green" "----> installing-datastore-cassandra"
 
   # Ref: https://docs.k8ssandra.io/reference/helm-chart/k8ssandra-operator/
   helm repo add k8ssandra https://helm.k8ssandra.io/stable
@@ -98,7 +98,7 @@ function installing-datastore-cassandra {
 
 ### Installing Datastore Clickhouse
 function installing-datastore-clickhouse {
-  echo "----> installing-datastore-clickhouse"
+  logme "$color_green" "----> installing-datastore-clickhouse"
 
   # Note: currently the dedicated ZooKeeper is for ClickHouse only 
   #       and may be removed once ClickHouse is transitioned to ClickHouse Keeper
@@ -130,7 +130,7 @@ function installing-datastore-clickhouse {
 
 ### Installing Instana's BeeInstana
 function installing-beeinstana {
-  echo "----> installing-beeinstana"
+  logme "$color_green" "----> installing-beeinstana"
 
   echo "----> BeeInstana operator"
   helm repo add instana https://helm.instana.io/artifactory/rel-helm-customer-virtual \
@@ -157,7 +157,7 @@ function installing-beeinstana {
 
 ### Installing Instana Operator
 function installing-instana-operator {
-  echo "----> installing-instana-operator"
+  logme "$color_green" "----> installing-instana-operator"
 
   # Create the secret
   kubectl create secret docker-registry instana-registry \
@@ -175,7 +175,7 @@ function installing-instana-operator {
 }
 
 function installing-instana-server-secret-image-pullsecret {
-  echo "----> installing-instana-server-secret-image-pullsecret"
+  logme "$color_green" "----> installing-instana-server-secret-image-pullsecret"
 
   # Create image pull secrets in both namespaces
   for n in {"instana-core","instana-units"}; do
@@ -190,7 +190,7 @@ function installing-instana-server-secret-image-pullsecret {
 }
 
 function installing-instana-server-secret-instana-core {
-  echo "----> installing-instana-server-secret-instana-core"
+  logme "$color_green" "----> installing-instana-server-secret-instana-core"
 
   kubectl delete secret/instana-core --namespace instana-core || true
 
@@ -247,7 +247,7 @@ function installing-instana-server-secret-instana-core {
 }
 
 function installing-instana-server-secret-instana-tls {
-  echo "----> installing-instana-server-secret-instana-tls"
+  logme "$color_green" "----> installing-instana-server-secret-instana-tls"
 
   local signing_fqdn="$(get-signing-fqdn "${INSTANA_EXPOSED_FQDN}")"
   logme "$color_green" "the signed FQDN for TLS is: ${signing_fqdn}"
@@ -264,7 +264,7 @@ function installing-instana-server-secret-instana-tls {
 }
 
 function installing-instana-server-secret-tenant0-unit0 {
-  echo "----> installing-instana-server-secret-tenant0-unit0"
+  logme "$color_green" "----> installing-instana-server-secret-tenant0-unit0"
 
   # Generate and download the license file based on the sales key
   kubectl instana license download \
@@ -285,7 +285,7 @@ function installing-instana-server-secret-tenant0-unit0 {
 }
 
 function installing-instana-server-core {
-  echo "----> installing-instana-server-core"
+  logme "$color_green" "----> installing-instana-server-core"
 
   # Create the `instana-core` CR object
   envsubst < manifests/core.yaml | kubectl apply -f -
@@ -294,7 +294,7 @@ function installing-instana-server-core {
 }
 
 function installing-instana-server-unit {
-  echo "----> installing-instana-server-unit"
+  logme "$color_green" "----> installing-instana-server-unit"
 
   # Create unit object
   kubectl apply -f manifests/tenant0-unit0.yaml
@@ -303,7 +303,7 @@ function installing-instana-server-unit {
 }
 
 function exposing-instana-server-servies {
-  echo "----> exposing-instana-server-servies"
+  logme "$color_green" "----> exposing-instana-server-servies"
 
   # Expose services by NodePort
   envsubst < manifests/services-with-nodeport.yaml | kubectl apply -f -
@@ -312,9 +312,10 @@ function exposing-instana-server-servies {
 }
 
 function how-to-access-instana {
-  echo "#################################################"
+  logme "$color_green" "#################################################"
   echo "You should be able to acdess Instana UI by:"
   echo " - URL: https://${INSTANA_EXPOSED_FQDN}:${INSTANA_EXPOSED_PORT}"
   echo " - USER: ${INSTANA_ADMIN_USER}"
   echo " - PASSWORD: ${INSTANA_ADMIN_PWD}"
+  logme "$color_green" "#################################################"
 }
