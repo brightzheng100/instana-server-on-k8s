@@ -13,11 +13,10 @@ initialAdminPassword: ${INSTANA_ADMIN_PWD}
 
 # The Instana license. Can be a plain text string or a JSON array encoded as string. 
 # [DEPRECATED] Use 'licenses' instead. Will no longer be supported release 243 onwards.
-#license: mylicensestring # This would also work: '["mylicensestring"]'
+#license: mylicensestring
 # A list of Instana licenses. Multiple licenses may be specified.
 #licenses: [ "license1", "license2" ]
-licenses:
-  - '${license}'
+licenses: ${license}
 
 # A list of agent keys. Specifying multiple agent keys enables gradually rotating agent keys.
 agentKeys:
