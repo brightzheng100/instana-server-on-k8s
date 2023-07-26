@@ -147,6 +147,9 @@ spec:
       enabled: true
     - name: feature.infra.explore.presentation.enabled
       enabled: true
+    # Logging
+    - name: feature.logging.enabled
+      enabled: true
   # SMTP
   emailConfig:
     smtpConfig:
