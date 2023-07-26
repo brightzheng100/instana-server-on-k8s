@@ -1,17 +1,24 @@
 # The initial user of this tenant unit with admin role, default admin@instana.local.
-# Must be a valid e-maiol address.
+# Must be a valid e-mail address.
 # NOTE:
 # This only applies when setting up the tenant unit.
 # Changes to this value won't have any effect.
 initialAdminUser: ${INSTANA_ADMIN_USER}
+
 # The initial admin password.
 # NOTE:
 # This is only used for the initial tenant unit setup.
 # Changes to this value won't have any effect.
 initialAdminPassword: ${INSTANA_ADMIN_PWD}
-# The Instana license. Can be a plain text string or a JSON array encoded as string.
-# This would also work: '["mylicensestring"]'
-license: '${license}'
+
+# The Instana license. Can be a plain text string or a JSON array encoded as string. 
+# [DEPRECATED] Use 'licenses' instead. Will no longer be supported release 243 onwards.
+#license: mylicensestring # This would also work: '["mylicensestring"]'
+# A list of Instana licenses. Multiple licenses may be specified.
+#licenses: [ "license1", "license2" ]
+licenses:
+  - '${license}'
+
 # A list of agent keys. Specifying multiple agent keys enables gradually rotating agent keys.
 agentKeys:
   - ${INSTANA_AGENT_KEY}
