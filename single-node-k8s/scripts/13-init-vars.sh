@@ -22,41 +22,41 @@ export_var_with_default "CALICO_MANIFEST_FILE"                  "https://raw.git
 
 export_var_with_default "DATASTORE_MOUNT_ROOT"                  "/storage"
 
-export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_BEEINSTANA"    "local-path"
+export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
 
-export_var_with_default "DATASTORE_SIZE_CASSANDRA"              "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_CASSANDRA"     "local-path"
+export_var_with_default "DATASTORE_SIZE_CASSANDRA"              "10Gi"
 
+export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE"    "local-path"
 export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_DATA"        "10Gi"
 export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_LOG"         "1Gi"
-export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE"    "local-path"
 
-export_var_with_default "DATASTORE_SIZE_ZOOKEEPER"              "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_ZOOKEEPER"     "local-path"
+export_var_with_default "DATASTORE_SIZE_ZOOKEEPER"              "10Gi"
 
-export_var_with_default "DATASTORE_SIZE_ELASTICSEARCH"          "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_ELASTICSEARCH" "local-path"
+export_var_with_default "DATASTORE_SIZE_ELASTICSEARCH"          "10Gi"
 
-export_var_with_default "DATASTORE_SIZE_KAFKA"                  "2Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_KAFKA"         "local-path"
-export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
+export_var_with_default "DATASTORE_SIZE_KAFKA"                  "2Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_KAFKA_ZK"      "local-path"
+export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
 
-export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_POSTGRES"      "local-path"
+export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
 
-export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "local-path"
+export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
 case $ID in
   ubuntu) 
     # Ubuntu
-    export_var_with_default "INSTANA_VERSION"                   "251-0-1"
+    export_var_with_default "INSTANA_VERSION"                   "251-1-1"
     ;;
   *) 
     # Others
-    export_var_with_default "INSTANA_VERSION"                   "251_0-1"
+    export_var_with_default "INSTANA_VERSION"                   "251_1-1"
     ;;
 esac
 

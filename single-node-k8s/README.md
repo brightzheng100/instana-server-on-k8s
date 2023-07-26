@@ -2,6 +2,14 @@
 
 This repository guides you through how to set up Instana within a single-VM on Kubernetes, bootstrapped by `kubeadm`, from scratch.
 
+Tested environments and the Instana version used:
+
+- OS on `amd64` / `x86_64` CPU arch:
+  - RHEL 8.x
+  - Ubuntu 20.04
+- on Instana version `251-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+
+
 The architecture can be illustrated as below:
 
 ![Architecture of Instana Server](./misc/architecture.png)
@@ -17,13 +25,10 @@ The VM should meet these minimum specs:
 - 64G RAM
 - 500G HD (SSD preferred)
 
-Tested Operating Systems, on `amd64` / `x86_64` arch:
-- RHEL 8.x
-- Ubuntu 20.04
+Please note that the total of default memory requests exceed **64G** so I've scaled down some components to fit into above specs.
+Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
 
-> Note: the total of default memory requests exceeds **64G** so I've scaled down some components to fit into above specs. Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
-
-The resource utilization can be referred to below output -- so the RAM with 64G is at risk:
+The current setup's resource utilization can be referred to below output -- so the RAM with 64G is at risk as it reaches 133%:
 
 ```sh
 $ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
@@ -89,12 +94,12 @@ export INSTANA_ADMIN_PWD=MyCoolPassword
 Or, to use another desired version of Instana, if available, do something like this:
 
 ```sh
-export INSTANA_VERSION="251-0-1"
+export INSTANA_VERSION="251-1-1"
 ```
 
 > Note: The versioning pattern may be different in different OS'es. For example:
-> - On Ubuntu: 251-0-1
-> - On RHEL: 251_0-1
+> - On Ubuntu: 251-1-1
+> - On RHEL: 251_1-1
 
 Now, the preparation is done, and let's get started!
 
@@ -168,7 +173,7 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 15 mins for expected 22 pods
+# check before proceeding: wait 20 mins for expected 22 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
