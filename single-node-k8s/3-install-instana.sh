@@ -24,6 +24,8 @@ installing-beeinstana
 check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
 installing-instana-operator
+# check before proceeding: wait 8 mins for expected 2 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
 installing-instana-server-secret-image-pullsecret
 installing-instana-server-secret-instana-core

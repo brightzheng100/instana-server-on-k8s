@@ -136,9 +136,6 @@ spec:
           - ReadWriteOnce # local-path-config can support ReadWriteOnce only
   # Feature Flags
   featureFlags:
-    # Managing actions: https://www.ibm.com/docs/en/instana-observability/current?topic=instana-managing-actions-technology-preview
-    - name: feature.automation.enabled
-      enabled: true
     # Apdex: https://www.ibm.com/docs/en/instana-observability/current?topic=slo-apdex-closed-beta
     - name: feature.apdex.enabled
       enabled: true
@@ -149,6 +146,11 @@ spec:
       enabled: true
     # Logging
     - name: feature.logging.enabled
+      enabled: true
+    # Managing actions: https://www.ibm.com/docs/en/instana-observability/current?topic=instana-managing-actions-open-beta
+    - name: feature.automation.enabled
+      enabled: true
+    - name: feature.action.automation.enabled
       enabled: true
   # SMTP
   emailConfig:

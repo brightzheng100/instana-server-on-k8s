@@ -9,11 +9,20 @@ Tested environments and the Instana version used:
   - Ubuntu 20.04
 - on Instana version `251-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
 
+Please note that there are a couple of beta features turned on by default, as of writing:
+- BeeInstana
+- Apdex
+- Logging
+- Automation / Actioin Framework
+
+You may turn some of them off to save some resources, if you want.
+
+
+## Architecture
 
 The architecture can be illustrated as below:
 
 ![Architecture of Instana Server](./misc/architecture.png)
-
 
 
 ## Prerequisites
@@ -28,18 +37,15 @@ The VM should meet these minimum specs:
 Please note that the total of default memory requests exceed **64G** so I've scaled down some components to fit into above specs.
 Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
 
-The current setup's resource utilization can be referred to below output -- so the RAM with 64G is at risk as it reaches 133%:
+The current setup's resource utilization can be referred to below output -- so the RAM with 64G is at risk as it's overcommitted to be 141%:
 
 ```sh
 $ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
 ...
   Resource           Requests          Limits
   --------           --------          ------
-  cpu                12350m (77%)      8100m (50%)
-  memory             55551012Ki (84%)  87892004Ki (133%)
-  ephemeral-storage  0 (0%)            0 (0%)
-  hugepages-1Gi      0 (0%)            0 (0%)
-  hugepages-2Mi      0 (0%)            0 (0%)
+  cpu                12850m (80%)      8100m (50%)
+  memory             60159012Ki (91%)  93421604Ki (141%)
 ```
 
 
@@ -166,6 +172,8 @@ installing-beeinstana
 check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
 installing-instana-operator
+# check before proceeding: wait 8 mins for expected 2 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
 installing-instana-server-secret-image-pullsecret
 installing-instana-server-secret-instana-core
