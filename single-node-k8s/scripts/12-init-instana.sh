@@ -302,7 +302,7 @@ function installing-instana-server-unit {
   logme "$color_green" "DONE"
 }
 
-function exposing-instana-server-servies {
+function exposing-instana-server-services {
   logme "$color_green" "----> exposing-instana-server-servies"
 
   # Expose services by NodePort

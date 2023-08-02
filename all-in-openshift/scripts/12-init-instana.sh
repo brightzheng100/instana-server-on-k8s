@@ -4,7 +4,7 @@
 # This is the "overlay" of <root>/single-node-k8s/scripts/12-init-instana.sh
 # Only functions changed will be here for replacement
 
-function exposing-instana-server-servies {
+function exposing-instana-server-services {
   echo "----> exposing-instana-server-servies"
 
     # Create routes for gateway

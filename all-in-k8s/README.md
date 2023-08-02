@@ -50,7 +50,7 @@ Basically we need two types of storage:
 
 ## The TL'DR Guide
 
-You may run it in your Mac, or a Linux machine, as long as the required tools are installed.
+You may run it in your laptop (e.g. MacBook), or a Linux machine, either way should just work as long as you can access the Kubernetes cluster and the required tools are installed.
 
 **And, make sure you've already logged into Kubernetes cluster with ClusterAdmin permission.**
 
@@ -105,29 +105,32 @@ And, quite importantly, you have to take care of the StorageClasses for a list o
 So get ready and export them accordingly to fit into your Kubernetes context -- here I use `azurefile` as the file-based storage for `DATASTORE_STORAGE_CLASS_SPANS`, while `default` for the rest, both are available in AKS. You may check it out by running: `kubectl get storageclass`.
 
 ```sh
-export DATASTORE_SIZE_BEEINSTANA="10Gi"
 export DATASTORE_STORAGE_CLASS_BEEINSTANA="default"
-export DATASTORE_SIZE_CASSANDRA="10Gi"
+export DATASTORE_SIZE_BEEINSTANA="10Gi"
+
 export DATASTORE_STORAGE_CLASS_CASSANDRA="default"
+export DATASTORE_SIZE_CASSANDRA="10Gi"
+
+export DATASTORE_STORAGE_CLASS_CLICKHOUSE="default"
 export DATASTORE_SIZE_CLICKHOUSE_DATA="10Gi"
 export DATASTORE_SIZE_CLICKHOUSE_LOG="1Gi"
-export DATASTORE_STORAGE_CLASS_CLICKHOUSE="default"
-export DATASTORE_SIZE_ZOOKEEPER="10Gi"
+
 export DATASTORE_STORAGE_CLASS_ZOOKEEPER="default"
-export DATASTORE_SIZE_CLICKHOUSE="10Gi"
-export DATASTORE_STORAGE_CLASS_CLICKHOUSE="default"
-export DATASTORE_SIZE_CLICKHOUSE_ZK="2Gi"
-export DATASTORE_STORAGE_CLASS_CLICKHOUSE_ZK="default"
-export DATASTORE_SIZE_ELASTICSEARCH="10Gi"
+export DATASTORE_SIZE_ZOOKEEPER="10Gi"
+
 export DATASTORE_STORAGE_CLASS_ELASTICSEARCH="default"
-export DATASTORE_SIZE_KAFKA="2Gi"
+export DATASTORE_SIZE_ELASTICSEARCH="10Gi"
+
 export DATASTORE_STORAGE_CLASS_KAFKA="default"
-export DATASTORE_SIZE_KAFKA_ZK="10Gi"
+export DATASTORE_SIZE_KAFKA="2Gi"
 export DATASTORE_STORAGE_CLASS_KAFKA_ZK="default"
-export DATASTORE_SIZE_POSTGRES="3Gi"
+export DATASTORE_SIZE_KAFKA_ZK="10Gi"
+
 export DATASTORE_STORAGE_CLASS_POSTGRES="default"
-export DATASTORE_SIZE_SPANS="10Gi"
+export DATASTORE_SIZE_POSTGRES="3Gi"
+
 export DATASTORE_STORAGE_CLASS_SPANS="azurefile"
+export DATASTORE_SIZE_SPANS="10Gi"
 ```
 
 Optionally, you may export more environment variables to influence the installation if that makes sense -- the process will respect the desired changes you want to make.

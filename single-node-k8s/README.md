@@ -188,7 +188,7 @@ installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
-exposing-instana-server-servies
+exposing-instana-server-services
 ```
 
 ### 4. How to access?
