@@ -4,6 +4,24 @@
 
 This repository guides you through how to set up Instana on an CNCF-certified / OSS Kubernetes cluster, with 3rd party Operators for building the datastore components.
 
+Tested environments and the Instana version used:
+
+- Red Hat OpenShift Container Platform (OCP) v4.10 -- it should work in other OCP v4.x versions
+- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+
+Please note that there are a couple of beta features turned on by default, as of writing:
+- BeeInstana
+- Apdex
+- Logging
+- Automation / Actioin Framework
+
+You may turn off some of them to save some resources, if you want.
+
+
+## Architecture
+
+TODO
+
 ## Prerequisites
 
 ### The Tools
@@ -17,16 +35,16 @@ A series of tools will be needed, on the laptop or the VM where you run the scri
 
 ```sh
 $ kubectl instana --version
-kubectl-instana version 251-0 (commit=885fc4b04075df0620d8a9723e095975cd253394, date=2023-06-27T16:17:18+08:00)
+kubectl-instana version 253-1 (commit=63d2ba7e8fd09943f2c2da539a4ac5cfdb3f2852, date=2023-07-28T16:38:27+02:00)
 
 Minimum required database versions:
 
-clickhouse          :	Major: 22.3 	min. Minor: 2
-beeinstana          :	Major: 1 	    min. Minor: 160
-postgres            :	Major: 15 	  min. Minor: 0
-kafka               :	Major: 3 	    min. Minor: 2
-elasticsearch       :	Major: 7 	    min. Minor: 16
-cassandra           :	Major: 4 	    min. Minor: 0
+kafka               :	Major: 3 	min. Minor: 2
+elasticsearch       :	Major: 7 	min. Minor: 16
+cassandra           :	Major: 4 	min. Minor: 0
+clickhouse          :	Major: 23.3 	min. Minor: 2
+beeinstana          :	Major: 1 	min. Minor: 160
+postgres            :	Major: 15 	min. Minor: 0
 ```
 
 ### The Kubernetes Cluster
@@ -184,6 +202,8 @@ installing-beeinstana
 check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
 installing-instana-operator
+# check before proceeding: wait 8 mins for expected 2 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
 installing-instana-server-secret-image-pullsecret
 installing-instana-server-secret-instana-core
@@ -191,14 +211,14 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 15 mins for expected 22 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 22 "kubectl get pod -n instana-core"
+# check before proceeding: wait 20 mins for expected 22 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
-exposing-instana-server-servies
+exposing-instana-server-services
 ```
 
 > Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes.

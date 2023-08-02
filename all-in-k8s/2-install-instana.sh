@@ -23,6 +23,8 @@ installing-beeinstana
 check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
 installing-instana-operator
+# check before proceeding: wait 8 mins for expected 2 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
 installing-instana-server-secret-image-pullsecret
 installing-instana-server-secret-instana-core
@@ -30,14 +32,15 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 15 mins for expected 22 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 22 "kubectl get pod -n instana-core"
+# check before proceeding: wait 20 mins for expected 22 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
-exposing-instana-server-servies
+exposing-instana-server-services
+
 
 ## Print out the access info
 echo "#################################################"

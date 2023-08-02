@@ -1,2 +1,1 @@
-imagePullSecrets:
-  - name: instana-registry
+../../single-node-k8s/manifests/operator-values.yaml
