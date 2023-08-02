@@ -1,10 +1,29 @@
 # Deploying Instana on OpenShift Cluster
 
-This repository guides you through how to set up Instana on an OpenShift cluster, with built-in `Datastores` CRD for building the datastore components.
+**!!!WIP!!!**
+
+This repository guides you through how to set up Instana on an OpenShift cluster, with 3rd party Operators for building the datastore components.
+
+Tested environments and the Instana version used:
+
+- Red Hat OpenShift Container Platform (OCP) v4.10 -- it should work in other OCP v4.x versions
+- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+
+Please note that there are a couple of beta features turned on by default, as of writing:
+- BeeInstana
+- Apdex
+- Logging
+- Automation / Actioin Framework
+
+You may turn off some of them to save some resources, if you want.
+
+
+## Architecture
 
 The architecture can be illustrated as below:
 
 ![Architecture of Instana Server](./misc/architecture.png)
+
 
 ## Prerequisites
 
@@ -15,44 +34,31 @@ A series of tools will be needed, on the laptop or the VM where you run the scri
 - `kubectl`
 - `openssl`
 - `curl`
-- Instana kubectl plugin. Please visit the doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=premises-instana-kubectl-plug-in#manual-installation) to download the right `kubectl` plugin, with the desired version, and install it properly.
-- [`yq`](https://github.com/mikefarah/yq)
+- [`yq`](https://github.com/mikefarah/yq) -- do use the right tool with the link provided.
+- **Instana kubectl plugin**. Please visit the doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=installing-instana-kubectl-plug-in) to download the right `kubectl` plugin, with the **desired version**, and install it properly. Verify and make sure it works properly:
+
+```sh
+$ kubectl instana --version
+kubectl-instana version 253-1 (commit=63d2ba7e8fd09943f2c2da539a4ac5cfdb3f2852, date=2023-07-28T16:38:27+02:00)
+
+Minimum required database versions:
+
+kafka               :	Major: 3 	min. Minor: 2
+elasticsearch       :	Major: 7 	min. Minor: 16
+cassandra           :	Major: 4 	min. Minor: 0
+clickhouse          :	Major: 23.3 	min. Minor: 2
+beeinstana          :	Major: 1 	min. Minor: 160
+postgres            :	Major: 15 	min. Minor: 0
+```
+
 
 ### The OpenShift Cluster
 
-Since we're deploying Instana on OpenShift, a cluster is required.
+Since we're deploying Instana on OpenShift, an OpenShift cluster is required.
 
 It doesn't really matter whether it's a self-managed or managed cluster, like RedHat OpenShift Kubernetes Service (ROKS) on IBM Cloud, it should just work.
 
-I used a cluster with 3 worker nodes, each with 8 vCPU, 32G RAM, and 100G Disk.
-
-With one `small` profile tenant deployed, the resource utilization is around 60% on CPU requests and 82% on memory requests.
-
-```
-Allocated resources:
-  (Total limits may be over 100 percent, i.e., overcommitted.)
-  Resource           Requests          Limits
-  --------           --------          ------
-  cpu                4534m (57%)       4600m (58%)
-  memory             24268307Ki (83%)  26262816Ki (90%)
-
-
-Allocated resources:
-  (Total limits may be over 100 percent, i.e., overcommitted.)
-  Resource           Requests          Limits
-  --------           --------          ------
-  cpu                4671m (59%)       5600m (70%)
-  memory             23933459Ki (82%)  26186016Ki (89%)
-
-Allocated resources:
-  (Total limits may be over 100 percent, i.e., overcommitted.)
-  Resource           Requests          Limits
-  --------           --------          ------
-  cpu                5070m (64%)       8340m (105%)
-  memory             22628883Ki (77%)  33489184Ki (115%)
-```
-
-Please note that the CSI-compliant storage is very important while deploying Instana on OpenShift.
+Please note that the CSI-compliant storage is very important while deploying Instana on Kubernetes.
 
 Basically we need two types of storage:
 - Block storage for almost everything of the datastore components;
@@ -61,11 +67,14 @@ Basically we need two types of storage:
 
 ## The TL'DR Guide
 
-You may run it in your Mac, or a Linux machine, where the required tools are installed.
+You may run it in your laptop (e.g. MacBook), or a Linux machine, either way should just work as long as you can access the OpenShift cluster and the required tools are installed.
 
 **And, make sure you've already logged into OpenShift with ClusterAdmin permission.**
 
+
 ### 0. Prepare
+
+Typically, when setting up OpenShift, you've decided the way how to expose the services. Here I'd assume we're going to use the default route to expose Instana services.
 
 ```sh
 # Clone the repo
@@ -82,6 +91,45 @@ export INSTANA_DOWNLOAD_KEY="<THE LICENSE'S DOWNLOAD KEY>"
 export INSTANA_SALES_KEY="<THE LICENSE'S SALES KEY>"
 ```
 
+And, quite importantly, you have to take care of the StorageClasses for a list of persistence components.
+- For normal datastore components, like `DATASTORE_STORAGE_CLASS_CASSANDRA`, use block storage;
+- For `DATASTORE_STORAGE_CLASS_SPANS`, you must set the StorageClass that supports `ReadWriteMany` in a real-world multi-node cluster!
+
+So get ready and export them accordingly to fit into your Kubernetes context.
+
+In my case, I use `ocs-storagecluster-cephfs` as the file-based storage for `DATASTORE_STORAGE_CLASS_SPANS`, while `ocs-storagecluster-ceph-rbd` for the rest, both are available in OCS/Ceph.
+
+You may have a check on what storage classes should be used, by running: `kubectl get storageclass`.
+
+```sh
+export DATASTORE_STORAGE_CLASS_BEEINSTANA="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_BEEINSTANA="10Gi"
+
+export DATASTORE_STORAGE_CLASS_CASSANDRA="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_CASSANDRA="10Gi"
+
+export DATASTORE_STORAGE_CLASS_CLICKHOUSE="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_CLICKHOUSE_DATA="10Gi"
+export DATASTORE_SIZE_CLICKHOUSE_LOG="1Gi"
+
+export DATASTORE_STORAGE_CLASS_ZOOKEEPER="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_ZOOKEEPER="10Gi"
+
+export DATASTORE_STORAGE_CLASS_ELASTICSEARCH="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_ELASTICSEARCH="10Gi"
+
+export DATASTORE_STORAGE_CLASS_KAFKA="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_KAFKA="2Gi"
+export DATASTORE_STORAGE_CLASS_KAFKA_ZK="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_KAFKA_ZK="10Gi"
+
+export DATASTORE_STORAGE_CLASS_POSTGRES="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_POSTGRES="3Gi"
+
+export DATASTORE_STORAGE_CLASS_SPANS="ocs-storagecluster-cephfs"
+export DATASTORE_SIZE_SPANS="10Gi"
+```
+
 Optionally, you may export more environment variables to influence the installation if that makes sense -- the process will respect the desired changes you want to make.
 
 Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
@@ -92,34 +140,7 @@ For example, to change the default Instana console login password, do something 
 export INSTANA_ADMIN_PWD=MyCoolPassword
 ```
 
-And, quite importantly, you have to take care of the StorageClasses for a list of persistence components.
-- For normal datastore components, like `DATASTORE_STORAGE_CLASS_CASSANDRA`, use block storage;
-- For `DATASTORE_STORAGE_CLASS_SPANS`, you must set the StorageClass that supports `ReadWriteMany` in a real-world multi-node cluster!
-
-So get ready and export them accordingly to fit into your OpenShift context -- here I use `ibmc-file-gold-gid` as the file-based storage for `DATASTORE_STORAGE_CLASS_SPANS`, while `ibmc-block-gold` for the rest, both are available in **ROKS Classic, on IBM Cloud**.
-
-```sh
-export DATASTORE_SIZE_BEEINSTANA="10Gi"
-export DATASTORE_STORAGE_CLASS_BEEINSTANA="ibmc-block-gold"
-export DATASTORE_SIZE_CASSANDRA="10Gi"
-export DATASTORE_STORAGE_CLASS_CASSANDRA="ibmc-block-gold"
-export DATASTORE_SIZE_CLICKHOUSE="10Gi"
-export DATASTORE_STORAGE_CLASS_CLICKHOUSE="ibmc-block-gold"
-export DATASTORE_SIZE_CLICKHOUSE_ZK="2Gi"
-export DATASTORE_STORAGE_CLASS_CLICKHOUSE_ZK="ibmc-block-gold"
-export DATASTORE_SIZE_ELASTICSEARCH="10Gi"
-export DATASTORE_STORAGE_CLASS_ELASTICSEARCH="ibmc-block-gold"
-export DATASTORE_SIZE_KAFKA="2Gi"
-export DATASTORE_STORAGE_CLASS_KAFKA="ibmc-block-gold"
-export DATASTORE_SIZE_KAFKA_ZK="10Gi"
-export DATASTORE_STORAGE_CLASS_KAFKA_ZK="ibmc-block-gold"
-export DATASTORE_SIZE_POSTGRES="3Gi"
-export DATASTORE_STORAGE_CLASS_POSTGRES="ibmc-block-gold"
-export DATASTORE_SIZE_SPANS="10Gi"
-export DATASTORE_STORAGE_CLASS_SPANS="ibmc-file-gold-gid"
-```
-
-Now, let's get started!
+Till now, the preparation has been done, and let's get started!
 
 
 ### 1. Init it
@@ -144,106 +165,51 @@ So, run below commands, well, custom functions actually, one by one instead:
 
 ```sh
 creating-namespaces
+
 installing-cert-manager
 # check before proceeding: wait 5 mins for expected 3 pods
 check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
+
+installing-datastore-kafka
+installing-datastore-elasticsearch
+installing-datastore-postgres
+installing-datastore-cassandra
+installing-datastore-clickhouse
+
+installing-beeinstana
+# check before proceeding: wait 10 mins for expected 4 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
+
 installing-instana-operator
-installing-instana-datastores
-# check before proceeding: wait 10 mins for expected 8 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-datastores" 10 8 "kubectl get pod -n instana-datastores"
+# check before proceeding: wait 8 mins for expected 2 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
-installing-instana-server-components-secret-image-pullsecret
-installing-instana-server-components-secret-instana-core
-installing-instana-server-components-secret-instana-tls
-installing-instana-server-components-secret-tenant0-unit0
+installing-instana-server-secret-image-pullsecret
+installing-instana-server-secret-instana-core
+installing-instana-server-secret-instana-tls
+installing-instana-server-secret-tenant0-unit0
 
-installing-instana-server-components-core
-# check before proceeding: wait 15 mins for expected 20 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 15 20 "kubectl get pod -n instana-core"
+installing-instana-server-core
+# check before proceeding: wait 20 mins for expected 22 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
-installing-instana-server-components-unit
+installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
 exposing-instana-server-servies
 ```
 
-> Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes.
-> What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
+> Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes / OpenShift, as long as we have sufficient resources / worker nodes.
+> What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what I did for `tenant0-unit0`.
 
 
 ### 3. How to access?
 
 Once you've gone through all above steps successfully, the Instana should have been deployed.
+
 Now, you can print out the access info:
 
 ```sh
 how-to-access-instana
-```
-
-
-## Potential Issues & Solutions
-
-### Authentication issue for ElasticSearch
-
-If no pods are created in `instana-core` namespace, and you're seeing authentication issues in the operator logs, while accessing ElasticSearch:
-
-```log
-unable to authenticate user [elasticsearch_user] for REST request [/_cat/nodes?format=json&h=ip%2Cv]
-```
-
-We may need to reset the ElasticSearch superuser and create our configured one.
-
-Exec into ElasticSearch pod:
-
-```sh
-kubectl exec -n instana-datastores -it default-elasticsearch-0 -- bash
-```
-
-```
-bash-5.1$ pwd
-/usr/share/elasticsearch
-
-bash-5.1$ bin/elasticsearch-setup-passwords interactive
-
-Please confirm that you would like to continue [y/N] y
-
-Enter password for [elastic]: changeme
-Reenter password for [elastic]: changeme
-Enter password for [apm_system]: changeme
-Reenter password for [apm_system]: changeme
-Enter password for [kibana_system]: changeme
-Reenter password for [kibana_system]: changeme
-Enter password for [logstash_system]: changeme
-Reenter password for [logstash_system]: changeme
-Enter password for [beats_system]: changeme
-Reenter password for [beats_system]: changeme
-Enter password for [remote_monitoring_user]: changeme
-Reenter password for [remote_monitoring_user]: changeme
-Changed password for user [apm_system]
-Changed password for user [kibana_system]
-Changed password for user [kibana]
-Changed password for user [logstash_system]
-Changed password for user [beats_system]
-Changed password for user [remote_monitoring_user]
-Changed password for user [elastic]
-```
-
-Then create our configured user/password:
-
-```sh
-bash-5.1$ curl --user elastic:changeme -X POST "http://localhost:9200/_security/user/elasticsearch_user?pretty" -H 'Content-Type: application/json' -d'
-{
-  "password" : "elasticsearch_pass",
-  "roles" : [ "superuser" ]
-}
-'
-```
-
-You should be able to see the creation result:
-
-```json
-{
-  "created" : true
-}
 ```

@@ -9,29 +9,37 @@ quit_when_var_not_set   "INSTANA_SALES_KEY"
 export_var_with_default "INSTANA_EXPOSED_PORT"                  "443"
 export_var_with_default "INSTANA_EXPOSED_PORT_ACCEPTOR"         "443"
 
-#export_var_with_default "INSTANA_VERSION"                       "241-3"
 export_var_with_default "INSTANA_ADMIN_USER"                    "admin@instana.local"
 export_var_with_default "INSTANA_ADMIN_PWD"                     "Passw0rd"
 export_var_with_default "INSTANA_KEY_PASSPHRASE"                "Passw0rd"
 
-export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_BEEINSTANA"    "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_CASSANDRA"              "10Gi"
+export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_CASSANDRA"     "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_CLICKHOUSE"             "10Gi"
+export_var_with_default "DATASTORE_SIZE_CASSANDRA"              "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE"    "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_ZK"          "2Gi"
-export_var_with_default "DATASTORE_STORAGE_CLASS_CLICKHOUSE_ZK" "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_ELASTICSEARCH"          "10Gi"
+export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_DATA"        "10Gi"
+export_var_with_default "DATASTORE_SIZE_CLICKHOUSE_LOG"         "1Gi"
+
+export_var_with_default "DATASTORE_STORAGE_CLASS_ZOOKEEPER"     "ibmc-file-gold-gid"
+export_var_with_default "DATASTORE_SIZE_ZOOKEEPER"              "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_ELASTICSEARCH" "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_KAFKA"                  "2Gi"
+export_var_with_default "DATASTORE_SIZE_ELASTICSEARCH"          "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_KAFKA"         "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
+export_var_with_default "DATASTORE_SIZE_KAFKA"                  "2Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_KAFKA_ZK"      "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
+export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_POSTGRES"      "ibmc-file-gold-gid"
-export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
+export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "ibmc-file-gold-gid"
+export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
 
 ######### check required tools

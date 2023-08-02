@@ -1,5 +1,1 @@
-imagePullSecrets:
-  - name: instana-registry
-operator:
-  extraArgs:
-    - "--datastores=true"
+../../single-node-k8s/manifests/operator-values.yaml
