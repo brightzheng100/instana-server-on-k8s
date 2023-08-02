@@ -197,7 +197,7 @@ installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
 check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
-exposing-instana-server-servies
+exposing-instana-server-services
 ```
 
 > Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes / OpenShift, as long as we have sufficient resources / worker nodes.
