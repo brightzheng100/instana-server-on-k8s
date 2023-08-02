@@ -93,7 +93,7 @@ export INSTANA_SALES_KEY="<THE LICENSE'S SALES KEY>"
 
 And, quite importantly, you have to take care of the StorageClasses for a list of persistence components.
 - For normal datastore components, like `DATASTORE_STORAGE_CLASS_CASSANDRA`, use block storage;
-- For `DATASTORE_STORAGE_CLASS_SPANS`, you must set the StorageClass that supports `ReadWriteMany` in a real-world multi-node cluster!
+- For `DATASTORE_STORAGE_CLASS_SPANS`, you must set the StorageClass that supports `ReadWriteMany`, or S3 compatible storage, in a real-world multi-node cluster!
 
 So get ready and export them accordingly to fit into your Kubernetes context.
 
