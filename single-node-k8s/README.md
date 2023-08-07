@@ -7,7 +7,7 @@ Tested environments and the Instana version used:
 - OS on `amd64` / `x86_64` CPU arch:
   - RHEL 8.x
   - Ubuntu 20.04
-- on Instana version `251-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
 
 Please note that there are a couple of beta features turned on by default, as of writing:
 - BeeInstana
@@ -100,12 +100,12 @@ export INSTANA_ADMIN_PWD=MyCoolPassword
 Or, to use another desired version of Instana, if available, do something like this:
 
 ```sh
-export INSTANA_VERSION="251-1-1"
+export INSTANA_VERSION="253-1-1"
 ```
 
 > Note: The versioning pattern may be different in different OS'es. For example:
-> - On Ubuntu: 251-1-1
-> - On RHEL: 251_1-1
+> - On Ubuntu: 253-1-1
+> - On RHEL: 253_1-1
 
 Now, the preparation is done, and let's get started!
 
@@ -181,7 +181,8 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 pods
+# check before proceeding: wait 20 mins for expected 22 more pods
+# Note: this depends on the beta features as well so don't be that exact
 check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
