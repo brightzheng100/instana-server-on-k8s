@@ -52,11 +52,11 @@ export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 case $ID in
   ubuntu) 
     # Ubuntu
-    export_var_with_default "INSTANA_VERSION"                   "251-1-1"
+    export_var_with_default "INSTANA_VERSION"                   "253-1-1"
     ;;
   *) 
     # Others
-    export_var_with_default "INSTANA_VERSION"                   "251_1-1"
+    export_var_with_default "INSTANA_VERSION"                   "253_1-1"
     ;;
 esac
 
