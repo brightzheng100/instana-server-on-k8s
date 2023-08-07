@@ -48,6 +48,6 @@ Refer to [all-in-openshift/README.md](./all-in-openshift/README.md).
 
 ## Deploying Instana on a "hybrid" env: ROKS + VM-based Datastores
 
-Well, copied from my archived [`brightzheng100/instana-server-on-roks`](https://github.com/brightzheng100/instana-server-on-roks) and not yet to further review.
+Well, the original experiment was with the `Datastores` CRD which had been deprecated.
 
-Refer to [roks-with-vm-based-datastores/README.md](./roks-with-vm-based-datastores/README.md).
+You may refer to my archived [`brightzheng100/instana-server-on-roks`](https://github.com/brightzheng100/instana-server-on-roks).
