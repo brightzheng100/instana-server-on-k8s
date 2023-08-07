@@ -15,9 +15,9 @@ spec:
   dockerImage: ghcr.io/zalando/spilo-15:2.1-p9
   teamId: instana
   numberOfInstances: 1
-  # spiloRunAsUser: 101
-  # spiloFSGroup: 103
-  # spiloRunAsGroup: 103
+  spiloRunAsUser: 101
+  spiloFSGroup: 101
+  spiloRunAsGroup: 101
   postgresql:
     version: "15"
     parameters:  # Expert section
