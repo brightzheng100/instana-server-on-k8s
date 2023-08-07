@@ -1,0 +1,103 @@
+# postgres-scc
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: postgres-scc
+runAsUser:
+  type: MustRunAs
+  uid: 101
+seLinuxContext:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+allowHostDirVolumePlugin: false
+allowHostNetwork: true
+allowHostPorts: true
+allowPrivilegedContainer: false
+allowHostIPC: true
+allowHostPID: true
+readOnlyRootFilesystem: false
+users:
+  - system:serviceaccount:instana-postgres:postgres-operator
+  - system:serviceaccount:instana-postgres:postgres-pod
+  - system:serviceaccount:instana-postgres:default
+
+# elasticsearch-scc
+---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: RoleBinding
+# metadata:
+#   name: system:openshift:scc:anyuid
+#   namespace: instana-elasticsearch
+# roleRef:
+#   apiGroup: rbac.authorization.k8s.io
+#   kind: ClusterRole
+#   name: system:openshift:scc:anyuid
+# subjects:
+# - kind: ServiceAccount
+#   name: elastic-operator
+#   namespace: instana-elasticsearch
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: elasticsearch-scc
+runAsUser:
+  type: MustRunAs
+  uid: 1000
+seLinuxContext:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+users:
+  - system:serviceaccount:instana-elasticsearch:elastic-operator
+  - system:serviceaccount:instana-elasticsearch:default
+
+# cassandra-scc
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: cassandra-scc
+runAsUser:
+  type: MustRunAs
+  uid: 999
+seLinuxContext:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+allowHostDirVolumePlugin: false
+allowHostNetwork: true
+allowHostPorts: true
+allowPrivilegedContainer: false
+allowHostIPC: true
+allowHostPID: true
+readOnlyRootFilesystem: false
+users:
+  - system:serviceaccount:instana-cassandra:cass-operator
+  - system:serviceaccount:instana-cassandra:default
+
+# clickhouse-scc
+---
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: clickhouse-scc
+runAsUser:
+  type: MustRunAs
+  uid: 1001
+seLinuxContext:
+  type: RunAsAny
+fsGroup:
+  type: RunAsAny
+allowHostDirVolumePlugin: false
+allowHostNetwork: true
+allowHostPorts: true
+allowPrivilegedContainer: false
+allowHostIPC: true
+allowHostPID: true
+readOnlyRootFilesystem: false
+users:
+  - system:serviceaccount:instana-clickhouse:clickhouse-operator
+  - system:serviceaccount:instana-clickhouse:zookeeper-operator
+  - system:serviceaccount:instana-clickhouse:default

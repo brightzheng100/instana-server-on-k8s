@@ -6,7 +6,7 @@ This repository guides you through how to set up Instana on an OpenShift cluster
 
 Tested environments and the Instana version used:
 
-- Red Hat OpenShift Container Platform (OCP) v4.10 -- it should work in other OCP v4.x versions
+- Red Hat OpenShift Container Platform (OCP) v4.12 -- it should work in other/newer OCP v4.x versions
 - on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
 
 Please note that there are a couple of beta features turned on by default, as of writing:
@@ -166,6 +166,8 @@ So, run below commands, well, custom functions actually, one by one instead:
 ```sh
 creating-namespaces
 
+installing-scc
+
 installing-cert-manager
 # check before proceeding: wait 5 mins for expected 3 pods
 check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
@@ -190,7 +192,8 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 pods
+# check before proceeding: wait 20 mins for expected 22 more pods
+# Note: this depends on the beta features as well so don't be that exact 
 check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit

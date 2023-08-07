@@ -8,6 +8,8 @@ echo "#################################################"
 
 creating-namespaces
 
+installing-scc
+
 installing-cert-manager
 # check before proceeding: wait 5 mins for expected 3 pods
 check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
@@ -32,7 +34,8 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 pods
+# check before proceeding: wait 20 mins for expected 22 more pods
+# Note: this depends on the beta features as well so don't be that exact
 check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit

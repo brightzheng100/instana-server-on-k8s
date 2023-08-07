@@ -1,1 +1,166 @@
-../../single-node-k8s/manifests/core.yaml
+apiVersion: instana.io/v1beta2
+kind: Core
+metadata:
+  name: instana-core
+  namespace: instana-core
+spec:
+  agentAcceptorConfig:
+    # Host for the agent acceptor. eg: agent.instana.<xxxx.nip.io>
+    host: "agent.${INSTANA_EXPOSED_FQDN}"
+    port: ${INSTANA_EXPOSED_PORT_ACCEPTOR}
+
+  # Base domain for Instana. eg: instana.<xxxx.nip.io>
+  baseDomain: "${INSTANA_EXPOSED_FQDN}"
+
+  # ComponentConfig to override components' defaults, especially resources
+  componentConfigs:
+    - name: acceptor
+      replicas: 1
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: gateway
+      properties:
+        - name: nginx.http.server_names_hash_bucket_size
+          value: "256" # This is important when FQDN is long, default 128
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-health-aggregator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-health-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-reader
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: appdata-writer
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-acceptor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-health-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: eum-processor
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: gateway
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: js-stack-trace-translator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+    - name: sli-evaluator
+      resources:
+        requests:
+          memory: 1.5Gi # defaults 2666Mi
+  # DatastoreConfigs
+  datastoreConfigs:
+    cassandraConfigs:
+      - hosts: [ instana-instana-cassandra-service.instana-cassandra ]
+        ports:
+          - name: tcp
+            port: 9042
+        keyspaces:
+          - profiles
+          - spans
+          - metrics
+          - state
+        authEnabled: true
+    clickhouseConfigs:
+      - hosts: [ chi-instana-clickhouse-local-0-0.instana-clickhouse ]
+        ports:
+          - name: tcp
+            port: 9000
+          - name: http
+            port: 8123
+        schemas:
+          - application
+          - logs
+        clusterName: local
+        authEnabled: true
+    elasticsearchConfig:
+      hosts: [ instana-elasticsearch-es-http.instana-elasticsearch ]
+      ports:
+        - name: tcp
+          port: 9300
+        - name: http
+          port: 9200
+      clusterName: onprem_onprem
+      authEnabled: true
+    kafkaConfig:
+      hosts: [ instana-kafka-kafka-bootstrap.instana-kafka ]
+      ports:
+        - name: tcp
+          port: 9092
+      authEnabled: true
+      saslMechanism: SCRAM-SHA-512
+    postgresConfigs:
+      - hosts: [ instana-postgres.instana-postgres ]
+        ports:
+          - name: tcp
+            port: 5432
+        databases:
+          - butlerdb
+          - tenantdb
+          - sales
+        authEnabled: true
+    beeInstanaConfig:
+      hosts: [ aggregators.instana-beeinstana ]  
+      ports:
+        - name: tcp
+          port: 9998
+      clustered: true
+      authEnabled: true
+  # Storage configs
+  storageConfigs:
+    rawSpans:
+      pvcConfig:
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_SPANS}
+        storageClassName: ${DATASTORE_STORAGE_CLASS_SPANS}
+        accessModes:
+          - ReadWriteOnce # local-path-config can support ReadWriteOnce only
+  # Feature Flags
+  featureFlags:
+    # Apdex: https://www.ibm.com/docs/en/instana-observability/current?topic=slo-apdex-closed-beta
+    - name: feature.apdex.enabled
+      enabled: true
+    # BeeInstana
+    - name: feature.beeinstana.infra.metrics.enabled
+      enabled: true
+    - name: feature.infra.explore.presentation.enabled
+      enabled: true
+    # Logging
+    - name: feature.logging.enabled
+      enabled: true
+    # Managing actions: https://www.ibm.com/docs/en/instana-observability/current?topic=instana-managing-actions-open-beta
+    - name: feature.automation.enabled
+      enabled: true
+    - name: feature.action.automation.enabled
+      enabled: true
+  # SMTP
+  emailConfig:
+    smtpConfig:
+      from: test@example.com
+      host: example.com
+      port: 465
+      useSSL: false
+  imageConfig:
+    registry: artifact-public.instana.io
+  resourceProfile: small
+  imagePullSecrets:
+    - name: instana-registry
