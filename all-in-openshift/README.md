@@ -1,7 +1,5 @@
 # Deploying Instana on OpenShift Cluster
 
-**!!!WIP!!!**
-
 This repository guides you through how to set up Instana on an OpenShift cluster, with 3rd party Operators for building the datastore components.
 
 Tested environments and the Instana version used:
@@ -16,13 +14,6 @@ Please note that there are a couple of beta features turned on by default, as of
 - Automation / Actioin Framework
 
 You may turn off some of them to save some resources, if you want.
-
-
-## Architecture
-
-The architecture can be illustrated as below:
-
-![Architecture of Instana Server](./misc/architecture.png)
 
 
 ## Prerequisites
@@ -216,3 +207,5 @@ Now, you can print out the access info:
 ```sh
 how-to-access-instana
 ```
+
+Important note: if the Chrome blocks the URL due to self-signed cert, you may refer to [this Gist](https://gist.github.com/brightzheng100/d124ff73e39c68a66fdc97a0a7d04b11) for the access.
