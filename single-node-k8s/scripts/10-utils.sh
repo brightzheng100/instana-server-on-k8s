@@ -156,8 +156,8 @@ function check-namespaced-pod-status {
         
         logme "$color_yellow" "Waiting for pods in \"$namespace\" to be ready: expected >= $expected_pods_min; current = $wc_all; ongoing = $wc_remaining... recheck in $time of $timeout_min mins"
         
-        if [ $wc_remaining -le 0 ] && [ $wc_all -ge $expected_pods_min ]; then
-            # no more remaining
+        if [[ $wc_all -ge $expected_pods_min ]]; then
+            # no current pods are equal or more than expected, done
             finished=true
             logme "$color_green" "DONE!"
             break
@@ -212,8 +212,8 @@ function check-namespaced-pod-status-and-keep-displaying-info {
         
         logme "$color_yellow" "Waiting for pods in \"$namespace\" to be running/completed: expected >= $expected_pods_min; current = $wc_all; ongoing = $wc_remaining... recheck in $time of $timeout_min mins"
         
-        if [ $wc_remaining -le 0 ] && [ $wc_all -ge $expected_pods_min ]; then
-            # no more remaining, or just a few ignorable pods
+        if [[ $wc_all -ge $expected_pods_min ]]; then
+            # no current pods are equal or more than expected, done
             finished=true
             logme "$color_green" "DONE!"
             break
