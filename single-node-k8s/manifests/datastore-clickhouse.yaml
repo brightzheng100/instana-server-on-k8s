@@ -76,7 +76,7 @@ spec:
         spec:
           containers:
             - name: instana-clickhouse
-              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:22.3.19.6-3-lts-ibm_v0.26.1
+              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:23.3.2.37-1-lts-ibm_v0.26.0
               command:
                 - clickhouse-server
                 - --config-file=/etc/clickhouse-server/config.xml
