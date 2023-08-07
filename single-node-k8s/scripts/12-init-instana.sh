@@ -159,6 +159,8 @@ function installing-beeinstana {
 function installing-instana-operator {
   logme "$color_green" "----> installing-instana-operator"
 
+  kubectl delete secret/instana-registry -n instana-operator || true
+
   # Create the secret
   kubectl create secret docker-registry instana-registry \
     --namespace=instana-operator \
@@ -179,6 +181,7 @@ function installing-instana-server-secret-image-pullsecret {
 
   # Create image pull secrets in both namespaces
   for n in {"instana-core","instana-units"}; do
+    kubectl delete secret/instana-registry -n "${n}" || true
     kubectl create secret docker-registry instana-registry \
       --namespace="${n}" \
       --docker-username=_ \
@@ -192,7 +195,7 @@ function installing-instana-server-secret-image-pullsecret {
 function installing-instana-server-secret-instana-core {
   logme "$color_green" "----> installing-instana-server-secret-instana-core"
 
-  kubectl delete secret/instana-core --namespace instana-core || true
+  kubectl delete secret/instana-core -n instana-core || true
 
   # Prepare Secret: `instana-core`
   # dhParams
@@ -249,12 +252,14 @@ function installing-instana-server-secret-instana-core {
 function installing-instana-server-secret-instana-tls {
   logme "$color_green" "----> installing-instana-server-secret-instana-tls"
 
+  kubectl delete secret/instana-tls -n instana-core || true
+
   local signing_fqdn="$(get-signing-fqdn "${INSTANA_EXPOSED_FQDN}")"
   logme "$color_green" "the signed FQDN for TLS is: ${signing_fqdn}"
 
   openssl req -x509 -newkey rsa:2048 -keyout \
     _wip/tls.key -out _wip/tls.crt -days 365 -nodes \
-    -subj "/CN=*.${signing_fqdn}"
+    -subj "/CN=${signing_fqdn}"
 
   kubectl create secret tls instana-tls --namespace instana-core \
     --cert=_wip/tls.crt --key=_wip/tls.key
@@ -265,6 +270,8 @@ function installing-instana-server-secret-instana-tls {
 
 function installing-instana-server-secret-tenant0-unit0 {
   logme "$color_green" "----> installing-instana-server-secret-tenant0-unit0"
+
+  kubectl delete secret/tenant0-unit0 -n instana-units || true
 
   # Generate and download the license file based on the sales key
   kubectl instana license download \
