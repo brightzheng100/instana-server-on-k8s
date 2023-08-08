@@ -133,7 +133,7 @@ spec:
             storage: ${DATASTORE_SIZE_SPANS}
         storageClassName: ${DATASTORE_STORAGE_CLASS_SPANS}
         accessModes:
-          - ReadWriteOnce # local-path-config can support ReadWriteOnce only
+          - ReadWriteMany
   # Feature Flags
   featureFlags:
     # Apdex: https://www.ibm.com/docs/en/instana-observability/current?topic=slo-apdex-closed-beta
