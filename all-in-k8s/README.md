@@ -51,14 +51,6 @@ postgres            :	Major: 15 	min. Minor: 0
 
 Any CNCF-certified Kubernetes should just work -- and I tried IKS, AKS etc., nothing was different from the deployment experience perspective.
 
-I used a cluster with 3 worker nodes, each with 8 vCPU, 32G RAM, and 100G Disk.
-
-With one `small` profile tenant deployed, the resource utilization is around 60% on CPU requests and 82% on memory requests.
-
-```
-TODO
-```
-
 Please note that the CSI-compliant storage is very important while deploying Instana on Kubernetes.
 
 Basically we need two types of storage:

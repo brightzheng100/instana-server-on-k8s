@@ -36,6 +36,8 @@ function installing-datastore-kafka {
   # Ref: https://github.com/strimzi/strimzi-kafka-operator/tree/main/helm-charts/helm3/strimzi-kafka-operator
   helm repo add strimzi https://strimzi.io/charts/
   helm repo update
+
+  helm uninstall strimzi-kafka-operator -n instana-kafka || true
   helm install strimzi-kafka-operator strimzi/strimzi-kafka-operator -n instana-kafka \
     --version=0.35.1
     #--set=watchNamespaces="{instana-datastore-components}" \
@@ -52,6 +54,8 @@ function installing-datastore-elasticsearch {
   # Ref: https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-stack-helm-chart.html
   helm repo add elastic https://helm.elastic.co
   helm repo update
+
+  helm uninstall eck-operator -n instana-elasticsearch || true
   helm install eck-operator elastic/eck-operator -n instana-elasticsearch \
     --version=2.5.0
     #--set=managedNamespaces="{instana-datastore-components}" \
@@ -68,6 +72,8 @@ function installing-datastore-postgres {
   # Ref: https://github.com/zalando/postgres-operator/blob/master/charts/postgres-operator/values.yaml
   helm repo add postgres https://opensource.zalando.com/postgres-operator/charts/postgres-operator
   helm repo update
+
+  helm uninstall postgres-operator -n instana-postgres || true
   helm install postgres-operator postgres/postgres-operator -n instana-postgres \
     --version=1.9.0 \
     --set=configGeneral.kubernetes_use_configmaps=true
@@ -85,6 +91,8 @@ function installing-datastore-cassandra {
   # Ref: https://docs.k8ssandra.io/reference/helm-chart/k8ssandra-operator/
   helm repo add k8ssandra https://helm.k8ssandra.io/stable
   helm repo update
+
+  helm uninstall cass-operator -n instana-cassandra || true
   helm install cass-operator k8ssandra/cass-operator -n instana-cassandra \
     --version=0.40.0
     #--set=global.clusterScoped=true \
@@ -105,6 +113,8 @@ function installing-datastore-clickhouse {
   # Ref: https://github.com/pravega/zookeeper-operator/tree/master/charts/zookeeper-operator
   helm repo add pravega https://charts.pravega.io
   helm repo update
+
+  helm uninstall zookeeper-operator -n instana-clickhouse || true
   helm install zookeeper-operator pravega/zookeeper-operator -n instana-clickhouse \
     --version=0.2.15
     #--set=watchNamespace="instana-datastore-components"
@@ -117,8 +127,8 @@ function installing-datastore-clickhouse {
     kubectl apply -f -
     #sed 's|namespaces: \[\]|namespaces: \[instana-datastore-components\]|g' | \
 
-  kubectl create secret docker-registry instana-registry \
-    --namespace=instana-clickhouse \
+  kubectl delete secret/instana-registry -n instana-clickhouse || true
+  kubectl create secret docker-registry instana-registry -n instana-clickhouse \
     --docker-username=_ \
     --docker-password="${INSTANA_AGENT_KEY}" \
     --docker-server=artifact-public.instana.io
@@ -138,14 +148,14 @@ function installing-beeinstana {
     --password "${INSTANA_AGENT_KEY}"
   helm repo update
 
-  kubectl create secret docker-registry instana-registry \
-    --namespace=instana-beeinstana \
+  kubectl delete secret/instana-registry -n instana-beeinstana || true
+  kubectl create secret docker-registry instana-registry -n instana-beeinstana \
     --docker-server=artifact-public.instana.io \
     --docker-username=_ \
     --docker-password="${INSTANA_AGENT_KEY}"
   
-  helm install instana-beeinstana instana/beeinstana-operator \
-    --namespace=instana-beeinstana
+  helm uninstall instana-beeinstana -n instana-beeinstana || true
+  helm install instana-beeinstana instana/beeinstana-operator -n instana-beeinstana
     #--set=clusterScope=true \
     #--set=operatorWatchNamespace="instana-datastore-components" \
 
@@ -159,11 +169,9 @@ function installing-beeinstana {
 function installing-instana-operator {
   logme "$color_green" "----> installing-instana-operator"
 
-  kubectl delete secret/instana-registry -n instana-operator || true
-
   # Create the secret
-  kubectl create secret docker-registry instana-registry \
-    --namespace=instana-operator \
+  kubectl delete secret/instana-registry -n instana-operator || true
+  kubectl create secret docker-registry instana-registry -n instana-operator \
     --docker-username=_ \
     --docker-password="${INSTANA_AGENT_KEY}" \
     --docker-server=artifact-public.instana.io
@@ -194,8 +202,6 @@ function installing-instana-server-secret-image-pullsecret {
 
 function installing-instana-server-secret-instana-core {
   logme "$color_green" "----> installing-instana-server-secret-instana-core"
-
-  kubectl delete secret/instana-core -n instana-core || true
 
   # Prepare Secret: `instana-core`
   # dhParams
@@ -242,8 +248,8 @@ function installing-instana-server-secret-instana-core {
 
   # Create instana-core secret with the config file
   # Please note the key must be "config.yaml"
-  kubectl create secret generic instana-core \
-    --namespace instana-core \
+  kubectl delete secret/instana-core -n instana-core || true
+  kubectl create secret generic instana-core -n instana-core \
     --from-file=config.yaml=_wip/core-config.yaml
   
   logme "$color_green" "DONE"
@@ -252,8 +258,6 @@ function installing-instana-server-secret-instana-core {
 function installing-instana-server-secret-instana-tls {
   logme "$color_green" "----> installing-instana-server-secret-instana-tls"
 
-  kubectl delete secret/instana-tls -n instana-core || true
-
   local signing_fqdn="$(get-signing-fqdn "${INSTANA_EXPOSED_FQDN}")"
   logme "$color_green" "the signed FQDN for TLS is: ${signing_fqdn}"
 
@@ -261,8 +265,10 @@ function installing-instana-server-secret-instana-tls {
     _wip/tls.key -out _wip/tls.crt -days 365 -nodes \
     -subj "/CN=${signing_fqdn}"
 
-  kubectl create secret tls instana-tls --namespace instana-core \
-    --cert=_wip/tls.crt --key=_wip/tls.key
+  kubectl delete secret/instana-tls -n instana-core || true
+  kubectl create secret tls instana-tls -n instana-core \
+    --cert=_wip/tls.crt \
+    --key=_wip/tls.key
   kubectl label secret instana-tls app.kubernetes.io/name=instana -n instana-core
   
   logme "$color_green" "DONE"
@@ -270,8 +276,6 @@ function installing-instana-server-secret-instana-tls {
 
 function installing-instana-server-secret-tenant0-unit0 {
   logme "$color_green" "----> installing-instana-server-secret-tenant0-unit0"
-
-  kubectl delete secret/tenant0-unit0 -n instana-units || true
 
   # Generate and download the license file based on the sales key
   kubectl instana license download \
@@ -284,8 +288,8 @@ function installing-instana-server-secret-tenant0-unit0 {
 
   # Create tenant0-unit0 secret with the config file
   # Please note the key must be "config.yaml"
-  kubectl create secret generic tenant0-unit0 \
-    --namespace instana-units \
+  kubectl delete secret/tenant0-unit0 -n instana-units || true
+  kubectl create secret generic tenant0-unit0 -n instana-units \
     --from-file=config.yaml=_wip/unit-config.yaml
   
   logme "$color_green" "DONE"

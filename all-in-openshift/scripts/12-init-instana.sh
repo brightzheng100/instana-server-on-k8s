@@ -18,6 +18,8 @@ function installing-datastore-postgres {
   # Ref: https://github.com/zalando/postgres-operator/blob/master/charts/postgres-operator/values.yaml
   helm repo add postgres https://opensource.zalando.com/postgres-operator/charts/postgres-operator
   helm repo update
+
+  helm uninstall postgres-operator -n instana-postgres || true
   helm install postgres-operator postgres/postgres-operator -n instana-postgres \
     --version=1.9.0 \
     --set=configGeneral.kubernetes_use_configmaps=true \
@@ -36,6 +38,8 @@ function installing-datastore-cassandra {
   # Ref: https://docs.k8ssandra.io/reference/helm-chart/k8ssandra-operator/
   helm repo add k8ssandra https://helm.k8ssandra.io/stable
   helm repo update
+
+  helm uninstall cass-operator -n instana-cassandra || true
   helm install cass-operator k8ssandra/cass-operator -n instana-cassandra \
     --version=0.42.0 \
     --set securityContext.runAsGroup=999 \
@@ -59,14 +63,14 @@ function installing-beeinstana {
     --password "${INSTANA_AGENT_KEY}"
   helm repo update
 
-  kubectl create secret docker-registry instana-registry \
-    --namespace=instana-beeinstana \
+  kubectl delete secret/instana-registry -n instana-beeinstana || true
+  kubectl create secret docker-registry instana-registry -n instana-beeinstana \
     --docker-server=artifact-public.instana.io \
     --docker-username=_ \
     --docker-password="${INSTANA_AGENT_KEY}"
   
-  helm install instana-beeinstana instana/beeinstana-operator \
-    --namespace=instana-beeinstana \
+  helm uninstall instana-beeinstana -n instana-beeinstana || true
+  helm install instana-beeinstana instana/beeinstana-operator -n instana-beeinstana \
     --set operator.securityContext.seccompProfile.type=RuntimeDefault
     #--set=clusterScope=true \
     #--set=operatorWatchNamespace="instana-datastore-components" \
@@ -81,24 +85,26 @@ function installing-beeinstana {
 function exposing-instana-server-services {
   echo "----> exposing-instana-server-servies"
 
-    # Create routes for gateway
-  oc create route passthrough instana-gateway \
+  # Create routes for gateway
+  oc delete route/instana-gateway -n instana-core || true
+  oc create route passthrough instana-gateway -n instana-core \
     --hostname="`kubectl get core/instana-core -n instana-core -o jsonpath='{.spec.baseDomain}'`" \
     --service=gateway \
-    --port=https \
-    -n instana-core
-  oc create route passthrough instana-gateway-unit0-tenant0 \
+    --port=https
+
+  # Create routes for tenant
+  oc delete route/instana-gateway-unit0-tenant0 -n instana-core || true
+  oc create route passthrough instana-gateway-unit0-tenant0 -n instana-core \
     --hostname="unit0-tenant0.`kubectl get core/instana-core -n instana-core -o jsonpath='{.spec.baseDomain}'`" \
     --service=gateway \
-    --port=https \
-    -n instana-core
+    --port=https
 
   # Create routes for acceptor
-  oc create route passthrough instana-acceptor \
+  oc delete route/instana-acceptor -n instana-core || true
+  oc create route passthrough instana-acceptor -n instana-core \
     --hostname="`kubectl get core/instana-core -n instana-core -o jsonpath='{.spec.agentAcceptorConfig.host}'`" \
     --service=acceptor \
-    --port=http-service \
-    -n instana-core
+    --port=http-service
   
   logme "$color_green" "DONE"
 }
