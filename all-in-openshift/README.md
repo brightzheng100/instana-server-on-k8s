@@ -4,8 +4,8 @@ This repository guides you through how to set up Instana on an OpenShift cluster
 
 Tested environments and the Instana version used:
 
-- Red Hat OpenShift Container Platform (OCP) v4.12 -- it should work in other/newer OCP v4.x versions
-- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+- Red Hat OpenShift Container Platform (OCP) v4.12 -- it should work in other/newer OCP v4.x versions.
+- on Instana version `253-1`. Please note that the `kubectl instana` plugin's version determines the Instana version you will install.
 
 Please note that there are a couple of beta features turned on by default, as of writing:
 - BeeInstana

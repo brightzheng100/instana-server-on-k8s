@@ -6,8 +6,8 @@ This repository guides you through how to set up Instana on an CNCF-certified / 
 
 Tested environments and the Instana version used:
 
-- Red Hat OpenShift Container Platform (OCP) v4.10 -- it should work in other OCP v4.x versions
-- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+- Kubernetes v1.26.x -- it should work in other Kubernetes versions.
+- on Instana version `253-1`. Please note that the `kubectl instana` plugin's version determines the Instana version you will install.
 
 Please note that there are a couple of beta features turned on by default, as of writing:
 - BeeInstana
@@ -17,10 +17,6 @@ Please note that there are a couple of beta features turned on by default, as of
 
 You may turn off some of them to save some resources, if you want.
 
-
-## Architecture
-
-TODO
 
 ## Prerequisites
 
