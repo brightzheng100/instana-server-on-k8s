@@ -13,11 +13,11 @@ In this repo, I've hosted some deployment experiments, focusing on how to deploy
 
 There are some concepts like "modularization" and "reusability" and I like them, which also apply into how this repo is structured.
 
-Very simple, I built the `single-node-k8s` first and try to reuse what I've built with necesary "overlay" code/scripts, so:
+Very simple, I built the `single-node-k8s` first and try to reuse what I've built with necesary "overlay" code / scripts /yaml files, so:
 
 ```
 all-in-k8s (REVIEW IN PROGRESS)
-all-in-openshift (REVIEW IN PROGRESS)
+all-in-openshift
 
       |
       |
