@@ -125,11 +125,17 @@ Optionally, you may export more environment variables to influence the installat
 
 Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
 
-For example, to change the default Instana console login password, do something like this:
+<details>
+  <summary>Click here to show me some examples.</summary>
+  
+  For example, to change the default Instana console login password, do something like this:
 
-```sh
-export INSTANA_ADMIN_PWD=MyCoolPassword
-```
+  ```sh
+  export INSTANA_ADMIN_PWD=MyCoolPassword
+  ```
+
+</details>
+
 
 Till now, the preparation has been done, and let's get started!
 
@@ -152,50 +158,55 @@ If you want to install Instana in one shot, do this:
 ```
 
 But, I'd highly recommend you do it step by step so you have better chance to troubleshoot.
-So, run below commands, well, custom functions actually, one by one instead:
+So, run below commands, well, custom functions actually, one by one instead.
 
-```sh
-creating-namespaces
+<details>
+  <summary>Click here to show the step-by-step commands.</summary>
+  
+  ```sh
+  creating-namespaces
 
-installing-scc
+  installing-scc
 
-installing-cert-manager
-# check before proceeding: wait 5 mins for expected 3 pods
-check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
+  installing-cert-manager
+  # check before proceeding: wait 5 mins for expected 3 pods
+  check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
 
-installing-datastore-kafka
-installing-datastore-elasticsearch
-installing-datastore-postgres
-installing-datastore-cassandra
-installing-datastore-clickhouse
+  installing-datastore-kafka
+  installing-datastore-elasticsearch
+  installing-datastore-postgres
+  installing-datastore-cassandra
+  installing-datastore-clickhouse
 
-installing-beeinstana
-# check before proceeding: wait 10 mins for expected 4 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
+  installing-beeinstana
+  # check before proceeding: wait 10 mins for expected 4 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
-installing-instana-operator
-# check before proceeding: wait 8 mins for expected 2 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
+  installing-instana-operator
+  # check before proceeding: wait 8 mins for expected 2 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
-installing-instana-server-secret-image-pullsecret
-installing-instana-server-secret-instana-core
-installing-instana-server-secret-instana-tls
-installing-instana-server-secret-tenant0-unit0
+  installing-instana-server-secret-image-pullsecret
+  installing-instana-server-secret-instana-core
+  installing-instana-server-secret-instana-tls
+  installing-instana-server-secret-tenant0-unit0
 
-installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 more pods
-# Note: this depends on the beta features as well so don't be that exact 
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
+  installing-instana-server-core
+  # check before proceeding: wait 20 mins for expected 22 more pods
+  # Note: this depends on the beta features as well so don't be that exact 
+  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
-installing-instana-server-unit
-# check before proceeding: wait 10 mins for expected 6 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
+  installing-instana-server-unit
+  # check before proceeding: wait 10 mins for expected 6 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
 
-exposing-instana-server-services
-```
+  exposing-instana-server-services
+  ```
 
-> Note: Please note that multitenancy is fully supported when Instana is deployed on Kubernetes / OpenShift, as long as we have sufficient resources / worker nodes.
-> What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what I did for `tenant0-unit0`.
+</details>
+
+
+Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes. What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
 
 
 ### 3. How to access?

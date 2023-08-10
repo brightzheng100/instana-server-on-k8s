@@ -91,21 +91,26 @@ Optionally, you may export more environment variables to influence the installat
 
 Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
 
-For example, to change the default Instana console login password, do something like this:
+<details>
+  <summary>Click here to show me some examples.</summary>
+  
+  For example, to change the default Instana console login password, do something like this:
 
-```sh
-export INSTANA_ADMIN_PWD=MyCoolPassword
-```
+  ```sh
+  export INSTANA_ADMIN_PWD=MyCoolPassword
+  ```
 
-Or, to use another desired version of Instana, if available, do something like this:
+  Or, to use another desired version of Instana, if available, do something like this:
 
-```sh
-export INSTANA_VERSION="253-1-1"
-```
+  ```sh
+  export INSTANA_VERSION="253-1-1"
+  ```
 
-> Note: The versioning pattern may be different in different OS'es. For example:
-> - On Ubuntu: 253-1-1
-> - On RHEL: 253_1-1
+  > Note: The versioning pattern may be different in different OS'es. For example:
+  > - On Ubuntu: 253-1-1
+  > - On RHEL: 253_1-1
+
+</details>
 
 Now, the preparation is done, and let's get started!
 
@@ -126,21 +131,26 @@ If you want to spin up K8s in one shot, do this:
 ```
 
 But, I'd highly recommend you do it step by step so you have better chance to troubleshoot.
-So, run below commands, well, custom functions actually, one by one instead:
+So, run below commands, well, custom functions actually, one by one instead.
 
-```sh
-installing-k8s-tools
-installing-k8s-cri
+<details>
+  <summary>Click here to show the step-by-step commands.</summary>
+  
+  ```sh
+  installing-k8s-tools
+  installing-k8s-cri
 
-bootstrapping-k8s
-progress-bar 1
+  bootstrapping-k8s
+  progress-bar 1
 
-getting-ready-k8s
+  getting-ready-k8s
 
-installing-k8s-cni
+  installing-k8s-cni
 
-installing-tools
-```
+  installing-tools
+  ```
+</details>
+
 
 ### 3. Install Instana
 
@@ -151,46 +161,52 @@ Similarly, if you want to install Instana in one shot, do this:
 ```
 
 But, I'd highly recommend you do it step by step so you have better chance to troubleshoot.
-So, run below commands, well, custom functions actually, one by one instead:
+So, run below commands, well, custom functions actually, one by one instead.
 
-```sh
-creating-namespaces
-installing-local-path-provisioner
 
-installing-cert-manager
-# check before proceeding: wait 5 mins for expected 3 pods
-check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
+<details>
+  <summary>Show me the step-by-step commands</summary>
+  
+  ```sh
+  creating-namespaces
+  installing-local-path-provisioner
 
-installing-datastore-kafka
-installing-datastore-elasticsearch
-installing-datastore-postgres
-installing-datastore-cassandra
-installing-datastore-clickhouse
+  installing-cert-manager
+  # check before proceeding: wait 5 mins for expected 3 pods
+  check-namespaced-pod-status-and-keep-displaying-info "cert-manager" 5 3 "kubectl get pod -n cert-manager"
 
-installing-beeinstana
-# check before proceeding: wait 10 mins for expected 4 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
+  installing-datastore-kafka
+  installing-datastore-elasticsearch
+  installing-datastore-postgres
+  installing-datastore-cassandra
+  installing-datastore-clickhouse
 
-installing-instana-operator
-# check before proceeding: wait 8 mins for expected 2 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
+  installing-beeinstana
+  # check before proceeding: wait 10 mins for expected 4 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-beeinstana" 10 4 "kubectl get pod -n instana-beeinstana"
 
-installing-instana-server-secret-image-pullsecret
-installing-instana-server-secret-instana-core
-installing-instana-server-secret-instana-tls
-installing-instana-server-secret-tenant0-unit0
+  installing-instana-operator
+  # check before proceeding: wait 8 mins for expected 2 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-operator" 8 2 "kubectl get pod -n instana-operator"
 
-installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 more pods
-# Note: this depends on the beta features as well so don't be that exact
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
+  installing-instana-server-secret-image-pullsecret
+  installing-instana-server-secret-instana-core
+  installing-instana-server-secret-instana-tls
+  installing-instana-server-secret-tenant0-unit0
 
-installing-instana-server-unit
-# check before proceeding: wait 10 mins for expected 6 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
+  installing-instana-server-core
+  # check before proceeding: wait 20 mins for expected 22 more pods
+  # Note: this depends on the beta features as well so don't be that exact
+  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
 
-exposing-instana-server-services
-```
+  installing-instana-server-unit
+  # check before proceeding: wait 10 mins for expected 6 pods
+  check-namespaced-pod-status-and-keep-displaying-info "instana-units" 10 6 "kubectl get pod -n instana-units"
+
+  exposing-instana-server-services
+  ```
+</details>
+
 
 ### 4. How to access?
 
