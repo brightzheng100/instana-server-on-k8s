@@ -126,7 +126,7 @@ Optionally, you may export more environment variables to influence the installat
 Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
 
 <details>
-  <summary>Click here to show me some examples.</summary>
+  <summary>Click here to show some examples.</summary>
   
   For example, to change the default Instana console login password, do something like this:
 

@@ -92,7 +92,7 @@ Optionally, you may export more environment variables to influence the installat
 Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
 
 <details>
-  <summary>Click here to show me some examples.</summary>
+  <summary>Click here to show some examples.</summary>
   
   For example, to change the default Instana console login password, do something like this:
 
@@ -165,7 +165,7 @@ So, run below commands, well, custom functions actually, one by one instead.
 
 
 <details>
-  <summary>Show me the step-by-step commands</summary>
+  <summary>Click here to show the step-by-step commands.</summary>
   
   ```sh
   creating-namespaces
