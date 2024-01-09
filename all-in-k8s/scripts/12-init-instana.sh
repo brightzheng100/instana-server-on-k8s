@@ -16,7 +16,7 @@ function exposing-instana-server-services {
 function how-to-access-instana {
   local url="$( oc get route -n instana-core instana-gateway -o jsonpath='{.spec.host}' )"
 
-  echo "You should be able to acdess Instana UI by:"
+  echo "You should be able to access Instana UI by:"
   echo " - URL: https://${url}"
   echo " - USER: ${INSTANA_ADMIN_USER}"
   echo " - PASSWORD: ${INSTANA_ADMIN_PWD}"

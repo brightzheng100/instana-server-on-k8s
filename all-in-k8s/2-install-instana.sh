@@ -32,8 +32,8 @@ installing-instana-server-secret-instana-tls
 installing-instana-server-secret-tenant0-unit0
 
 installing-instana-server-core
-# check before proceeding: wait 20 mins for expected 22 pods
-check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
+# check before proceeding: wait 20 mins for expected 21 pods
+check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 21 "kubectl get pod -n instana-core"
 
 installing-instana-server-unit
 # check before proceeding: wait 10 mins for expected 6 pods
