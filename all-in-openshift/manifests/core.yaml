@@ -70,75 +70,52 @@ spec:
   datastoreConfigs:
     cassandraConfigs:
       - hosts: [ instana-instana-cassandra-service.instana-cassandra ]
-        ports:
-          - name: tcp
-            port: 9042
-        keyspaces:
-          - profiles
-          - spans
-          - metrics
-          - state
         authEnabled: true
     clickhouseConfigs:
       - hosts: [ chi-instana-clickhouse-local-0-0.instana-clickhouse ]
-        ports:
-          - name: tcp
-            port: 9000
-          - name: http
-            port: 8123
-        schemas:
-          - application
-          - logs
-        clusterName: local
         authEnabled: true
     elasticsearchConfig:
       hosts: [ instana-elasticsearch-es-http.instana-elasticsearch ]
-      ports:
-        - name: tcp
-          port: 9300
-        - name: http
-          port: 9200
-      clusterName: onprem_onprem
       authEnabled: true
     kafkaConfig:
       hosts: [ instana-kafka-kafka-bootstrap.instana-kafka ]
-      ports:
-        - name: tcp
-          port: 9092
       authEnabled: true
       saslMechanism: SCRAM-SHA-512
     postgresConfigs:
       - hosts: [ instana-postgres.instana-postgres ]
-        ports:
-          - name: tcp
-            port: 5432
-        databases:
-          - butlerdb
-          - tenantdb
-          - sales
         authEnabled: true
     beeInstanaConfig:
-      hosts: [ aggregators.instana-beeinstana ]  
-      ports:
-        - name: tcp
-          port: 9998
+      hosts: [ aggregators.instana-beeinstana ]
       clustered: true
       authEnabled: true
   # Storage configs
   storageConfigs:
     rawSpans:
       pvcConfig:
+        storageClassName: ${DATASTORE_STORAGE_CLASS_SPANS}
         resources:
           requests:
             storage: ${DATASTORE_SIZE_SPANS}
-        storageClassName: ${DATASTORE_STORAGE_CLASS_SPANS}
         accessModes:
           - ReadWriteMany
+    synthetics:
+      pvcConfig:
+        storageClassName: ${DATASTORE_STORAGE_CLASS_SYNTHETICS}
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_SYNTHETICS}
+        accessModes:
+          - ReadWriteOnce
+    syntheticsKeystore:
+      pvcConfig:
+        storageClassName: ${DATASTORE_STORAGE_CLASS_SYNTHETICS}
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${DATASTORE_SIZE_SYNTHETICS}
   # Feature Flags
   featureFlags:
-    # Apdex: https://www.ibm.com/docs/en/instana-observability/current?topic=slo-apdex-closed-beta
-    - name: feature.apdex.enabled
-      enabled: true
     # BeeInstana
     - name: feature.beeinstana.infra.metrics.enabled
       enabled: true
@@ -151,6 +128,17 @@ spec:
     - name: feature.automation.enabled
       enabled: true
     - name: feature.action.automation.enabled
+      enabled: true
+    # Synthetic monitoring: https://www.ibm.com/docs/en/instana-observability/current?topic=instana-synthetic-monitoring
+    - name: feature.synthetics.enabled
+      enabled: true
+    - name: feature.synthetic.smart.alerts.enabled
+      enabled: true
+    - name: feature.synthetic.create.test.advance.mode.enabled
+      enabled: true
+    - name: feature.synthetic.browser.create.test.enabled
+      enabled: true
+    - name: feature.synthetic.browser.script.enabled
       enabled: true
   # SMTP
   emailConfig:

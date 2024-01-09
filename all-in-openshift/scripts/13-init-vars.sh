@@ -14,6 +14,8 @@ export_var_with_default "INSTANA_ADMIN_PWD"                     "Passw0rd"
 export_var_with_default "INSTANA_KEY_PASSPHRASE"                "Passw0rd"
 
 
+######### Storage classes and the sizes
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_BEEINSTANA"    "ibmc-file-gold-gid"
 export_var_with_default "DATASTORE_SIZE_BEEINSTANA"             "10Gi"
 
@@ -38,11 +40,29 @@ export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_POSTGRES"      "ibmc-file-gold-gid"
 export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
 
+export_var_with_default DATASTORE_STORAGE_CLASS_SYNTHETICS      "ibmc-file-gold-gid"
+export_var_with_default DATASTORE_SIZE_SYNTHETICS               "5Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "ibmc-file-gold-gid"
 export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
+export_var_with_default "INSTANA_OPERATOR_VERSION"              "261.2.0"
+export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "261-2"
 
-######### check required tools
+
+######### Random passwords for Instana components
+
+export CASSANDRA_PASSWORD=`openssl rand -base64 12 | base64`
+export CASSANDRA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export CLICKHOUSE_PASSWORD=`openssl rand -base64 12 | base64`
+export CLICKHOUSE_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export ELASTICSEARCH_PASSWORD=`openssl rand -base64 12 | base64`
+export ELASTICSEARCH_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export BEEINSTANA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export BEEINSTANA_KAFKA_PASSWORD=`openssl rand -base64 12 | base64`
+
+
+######### Check required tools
 
 missed_tools=0
 echo "==========================================================="
@@ -52,7 +72,7 @@ if is_required_tool_missed "oc"; then missed_tools=$((missed_tools+1)); fi
 # check kubectl
 if is_required_tool_missed "kubectl"; then missed_tools=$((missed_tools+1)); fi
 # check Instana kubectl plugin
-if is_required_tool_missed "kubectl-instana"; then missed_tools=$((missed_tools+1)); fi
+# if is_required_tool_missed "kubectl-instana"; then missed_tools=$((missed_tools+1)); fi
 # check openssl
 if is_required_tool_missed "openssl"; then missed_tools=$((missed_tools+1)); fi
 # check curl

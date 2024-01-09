@@ -2,18 +2,20 @@
 
 This repository guides you through how to set up Instana on an OpenShift cluster, with 3rd party Operators for building the datastore components.
 
-Tested environments and the Instana version used:
+Latest review on 08 Jan 2024, with:
 
 - Red Hat OpenShift Container Platform (OCP) v4.12 -- it should work in other/newer OCP v4.x versions.
-- on Instana version `253-1`. Please note that the `kubectl instana` plugin's version determines the Instana version you will install.
+- Instana version `261-2`.
 
-Please note that there are a couple of beta features turned on by default, as of writing:
+Please note that there are quite some extra configurable features turned on by default, as of writing:
 - BeeInstana
-- Apdex
-- Logging
-- Automation / Actioin Framework
+- Logging (beta)
+- Automation / Action Framework (beta)
+- Synthetic Monitoring (beta)
 
-You may turn off some of them to save some resources, if you want.
+You may turn off some of them to save some resources, if you want, by updating [`core.yaml`](./manifests/core.yaml)'s **featureFlags**.
+
+For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=openshift-enabling-optional-features).
 
 
 ## Prerequisites
@@ -26,21 +28,6 @@ A series of tools will be needed, on the laptop or the VM where you run the scri
 - `openssl`
 - `curl`
 - [`yq`](https://github.com/mikefarah/yq) -- do use the right tool with the link provided.
-- **Instana kubectl plugin**. Please visit the doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=installing-instana-kubectl-plug-in) to download the right `kubectl` plugin, with the **desired version**, and install it properly. Verify and make sure it works properly:
-
-```sh
-$ kubectl instana --version
-kubectl-instana version 253-1 (commit=63d2ba7e8fd09943f2c2da539a4ac5cfdb3f2852, date=2023-07-28T16:38:27+02:00)
-
-Minimum required database versions:
-
-kafka               :	Major: 3 	min. Minor: 2
-elasticsearch       :	Major: 7 	min. Minor: 16
-cassandra           :	Major: 4 	min. Minor: 0
-clickhouse          :	Major: 23.3 	min. Minor: 2
-beeinstana          :	Major: 1 	min. Minor: 160
-postgres            :	Major: 15 	min. Minor: 0
-```
 
 
 ### The OpenShift Cluster
@@ -117,6 +104,9 @@ export DATASTORE_SIZE_KAFKA_ZK="10Gi"
 export DATASTORE_STORAGE_CLASS_POSTGRES="ocs-storagecluster-ceph-rbd"
 export DATASTORE_SIZE_POSTGRES="3Gi"
 
+export DATASTORE_STORAGE_CLASS_SYNTHETICS="ocs-storagecluster-ceph-rbd"
+export DATASTORE_SIZE_SYNTHETICS="5Gi"
+
 export DATASTORE_STORAGE_CLASS_SPANS="ocs-storagecluster-cephfs"
 export DATASTORE_SIZE_SPANS="10Gi"
 ```
@@ -133,6 +123,15 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   ```sh
   export INSTANA_ADMIN_PWD=MyCoolPassword
   ```
+
+  To use another desired version of Instana, if available, do something like this:
+
+  ```sh
+  export INSTANA_OPERATOR_VERSION="261.2.0"
+  export INSTANA_OPERATOR_IMAGETAG="261-2"
+  ```
+
+  > Note: configured version of Instana may or may not work with currently configured datastore components.
 
 </details>
 
@@ -192,9 +191,9 @@ So, run below commands, well, custom functions actually, one by one instead.
   installing-instana-server-secret-tenant0-unit0
 
   installing-instana-server-core
-  # check before proceeding: wait 20 mins for expected 22 more pods
-  # Note: this depends on the beta features as well so don't be that exact 
-  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
+  # check before proceeding: wait 20 mins for expected 21 more pods
+  # Note: this depends on the beta features as well so don't be that exact
+  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 21 "kubectl get pod -n instana-core"
 
   installing-instana-server-unit
   # check before proceeding: wait 10 mins for expected 6 pods
@@ -206,7 +205,7 @@ So, run below commands, well, custom functions actually, one by one instead.
 </details>
 
 
-Please note that multitenancy is fully supported when Instana is deployed on Kubernetes, as long as we have sufficient resources / worker nodes. What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
+Please note that multitenancy is fully supported when Instana is deployed on Kubernetes / OpenShift, as long as we have sufficient resources / worker nodes. What we need to do is to deploy multiple `Unit` objects, say `tenant-dev` and `tenant-prod`, like what we did for `tenant0-unit0`.
 
 
 ### 3. How to access?

@@ -1,24 +1,60 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-beeinstana-admin
+  namespace: instana-beeinstana
+type: Opaque
+stringData:
+  username: "instana"
+  password: "${BEEINSTANA_ADMIN_PASSWORD}"
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-beeinstana-kafka
+  namespace: instana-beeinstana
+type: Opaque
+stringData:
+  username: "instana"
+  password: "${BEEINSTANA_KAFKA_PASSWORD}"
+
+---
 apiVersion: beeinstana.instana.com/v1beta1
 kind: BeeInstana
 metadata:
   name: instana-beeinstana
   namespace: "instana-beeinstana"
 spec:
-  version: 1.1.3
+  version: 1.3.9
+  imagePullSecretName: instana-registry
+  adminCredentials:
+    secretName: instana-beeinstana-admin
   kafkaSettings:
     brokers:
       - instana-kafka-kafka-bootstrap.instana-kafka.svc:9092
+    securityProtocol: sasl_plaintext
+    saslMechanism: SCRAM-SHA-512
+    saslPasswordCredential:
+      secretName: instana-beeinstana-kafka
   config:
+    image:
+      pullPolicy: IfNotPresent
     cpu: 200m
     memory: 200Mi
     replicas: 1
   ingestor:
+    image:
+      pullPolicy: IfNotPresent
     cpu: 1
     memory: 1Gi
+    env: onprem
+    flushInterval: 10000
     limitMemory: true
-    env: on-prem
+    maxQueueSize: 5000
     metricsTopic: raw_metrics
     replicas: 1
+    workerPoolSize: 20
   aggregator:
     cpu: 1
     memory: 1Gi
