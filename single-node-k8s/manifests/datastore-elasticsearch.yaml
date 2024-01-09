@@ -1,10 +1,38 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-elasticsearch
+  namespace: instana-elasticsearch
+  annotations:
+    "helm.sh/resource-policy": keep
+stringData:
+  username: "instana"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  roles: "superuser"
+type: kubernetes.io/basic-auth
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-elasticsearch-admin
+  namespace: instana-elasticsearch
+  annotations:
+    "helm.sh/resource-policy": keep
+stringData:
+  username: "instanaadmin"
+  password: "${ELASTICSEARCH_ADMIN_PASSWORD}"
+  roles: "superuser"
+type: kubernetes.io/basic-auth
+
+---
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
   name: instana-elasticsearch
   namespace: instana-elasticsearch
 spec:
-  version: 7.16.3
+  version: 7.17.12
   nodeSets:
     - name: default
       count: 1
@@ -15,6 +43,11 @@ spec:
         node.store.allow_mmap: false
       podTemplate:
         spec:
+          imagePullSecrets:
+            - name: instana-registry
+          containers:
+            - name: elasticsearch
+              imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -33,3 +66,7 @@ spec:
     tls:
       selfSignedCertificate:
         disabled: true
+  auth:
+    fileRealm:
+      - secretName: instana-elasticsearch
+      - secretName: instana-elasticsearch-admin

@@ -5,14 +5,14 @@ function installing-k8s-tools {
   logme "$color_green" "----> installing-k8s-tools"
 
   # Add K8s repo
-  cat <<'EOF' | sudo tee /etc/yum.repos.d/kubernetes.repo
+  cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+baseurl=https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kubelet kubeadm kubectl
+gpgkey=https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 
   # Set SELinux in permissive mode (effectively disabling it)
@@ -20,13 +20,13 @@ EOF
   sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
   # Check the available candidates by:
-  #  dnf --showduplicates list kubelet
-  #  dnf --showduplicates list kubeadm
-  #  dnf --showduplicates list kubectl
-  sudo dnf install -y kubelet-$K8S_VERSION kubeadm-$K8S_VERSION kubectl-$K8S_VERSION --disableexcludes=kubernetes
+  #  sudo dnf --showduplicates list kubelet
+  #  sudo dnf --showduplicates list kubeadm
+  #  sudo dnf --showduplicates list kubectl
+  sudo dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
   # Enable kubelet
-  sudo systemctl enable kubelet
+  sudo systemctl enable --now kubelet
   
   logme "$color_green" "DONE"
 }
@@ -111,25 +111,26 @@ function installing-k8s-cni {
 function installing-tools {
   logme "$color_green" "----> installing-tools"
 
+  # Note: now we use Helm Chart, not plugin, to install operator
   # Instana kubectl plugin
-  logme "$color_green" "Instana kubectl plugin..."
-  cat << EOF | sudo tee /etc/yum.repos.d/instana.repo
-[instana-product]
-name=Instana-Product
-baseurl=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/rel-rpm-public-virtual/
-enabled=1
-gpgcheck=0
-gpgkey=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/api/security/keypair/public/repositories/rel-rpm-public-virtual
-repo_gpgcheck=1
-EOF
-  sudo dnf makecache -y
-  #sudo dnf --showduplicates list instana-kubectl
-  sudo dnf install -y instana-kubectl-${INSTANA_VERSION}
-  sudo dnf install python3-dnf-plugin-versionlock -y
-  sudo dnf versionlock add instana-console-${INSTANA_VERSION}
-  logme "$color_green" "`kubectl instana --version`"
+#   logme "$color_green" "Instana kubectl plugin..."
+#   cat << EOF | sudo tee /etc/yum.repos.d/instana.repo
+# [instana-product]
+# name=Instana-Product
+# baseurl=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/rel-rpm-public-virtual/
+# enabled=1
+# gpgcheck=0
+# gpgkey=https://_:${INSTANA_DOWNLOAD_KEY}@artifact-public.instana.io/artifactory/api/security/keypair/public/repositories/rel-rpm-public-virtual
+# repo_gpgcheck=1
+# EOF
+#   sudo dnf makecache -y
+#   #sudo dnf --showduplicates list instana-kubectl
+#   sudo dnf install -y instana-kubectl-${INSTANA_VERSION}
+#   sudo dnf install python3-dnf-plugin-versionlock -y
+#   sudo dnf versionlock add instana-console-${INSTANA_VERSION}
+#   logme "$color_green" "`kubectl instana --version`"
 
-  logme "$color_green" "Instana kubectl plugin - DONE"
+#   logme "$color_green" "Instana kubectl plugin - DONE"
 
   # yq
   logme "$color_green" "yq..."

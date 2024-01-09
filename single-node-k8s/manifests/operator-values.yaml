@@ -1,2 +1,5 @@
 imagePullSecrets:
   - name: instana-registry
+# operator:
+#   extraArgs:
+#     - --enable-network-policies

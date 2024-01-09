@@ -69,30 +69,30 @@ function installing-k8s-cri {
 function installing-tools {
   logme "$color_green" "----> installing-tools"
 
-  # Instana kubectl plugin
-  logme "$color_green" "Instana kubectl plugin..."
-  echo 'deb [signed-by=/usr/share/keyrings/instana-archive-keyring.gpg] https://artifact-public.instana.io/artifactory/rel-debian-public-virtual generic main' \
-    | sudo tee /etc/apt/sources.list.d/instana-product.list
+  # Note: now we use Helm Chart, not plugin, to install operator
+#   # Instana kubectl plugin
+#   logme "$color_green" "Instana kubectl plugin..."
+#   echo 'deb [signed-by=/usr/share/keyrings/instana-archive-keyring.gpg] https://artifact-public.instana.io/artifactory/rel-debian-public-virtual generic main' \
+#     | sudo tee /etc/apt/sources.list.d/instana-product.list
 
-  cat << EOF | sudo tee /etc/apt/auth.conf
-machine artifact-public.instana.io
-  login _
-  password ${INSTANA_AGENT_KEY}
-EOF
+#   cat << EOF | sudo tee /etc/apt/auth.conf
+# machine artifact-public.instana.io
+#   login _
+#   password ${INSTANA_AGENT_KEY}
+# EOF
 
-  sudo apt-get update -y
-  # Check the available candidates by:
-  #  sudo apt-cache madison instana-kubectl
-  sudo apt-get install -y instana-kubectl=${INSTANA_VERSION}
+#   sudo apt-get update -y
+#   # Check the available candidates by:
+#   #  sudo apt-cache madison instana-kubectl
+#   sudo apt-get install -y instana-kubectl=${INSTANA_VERSION}
 
-  cat << EOF | sudo tee /etc/apt/preferences.d/instana-kubectl
-Package: instana-kubectl
-Pin: version ${INSTANA_VERSION}
-Pin-Priority: 1000
-EOF
+#   cat << EOF | sudo tee /etc/apt/preferences.d/instana-kubectl
+# Package: instana-kubectl
+# Pin: version ${INSTANA_VERSION}
+# Pin-Priority: 1000
+# EOF
 
-
-  logme "$color_green" "Instana kubectl plugin - DONE"
+#   logme "$color_green" "Instana kubectl plugin - DONE"
 
   # yq
   logme "$color_green" "yq..."

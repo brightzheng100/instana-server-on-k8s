@@ -8,6 +8,7 @@ spec:
     templates:
       dataVolumeClaimTemplate: instana-clickhouse-data-volume
       logVolumeClaimTemplate: instana-clickhouse-log-volume
+      serviceTemplate: service-template
   configuration:
     files:
       config.d/storage.xml: |
@@ -38,14 +39,21 @@ spec:
       nodes:
         - host: instana-zookeeper-headless.instana-clickhouse
     profiles:
-      default/max_memory_usage: 10000000000
+      default/max_memory_usage: 8000000000  # 8GB
       default/joined_subquery_requires_alias: 0
       default/max_execution_time: 100
       default/max_query_size: 1048576
       default/use_uncompressed_cache: 0
+      default/enable_http_compression: 1
       default/load_balancing: random
       default/background_pool_size: 32
       default/background_schedule_pool_size: 32
+      default/distributed_directory_monitor_split_batch_on_failure: 1
+      default/distributed_directory_monitor_batch_inserts: 1
+      default/insert_distributed_sync: 1
+      default/log_queries: 1
+      default/log_query_views: 1
+      default/max_threads: 16
     quotas:
       default/interval/duration: 3600
       default/interval/queries: 0
@@ -54,32 +62,36 @@ spec:
       default/interval/read_rows: 0
       default/interval/execution_time: 0
     users:
-      default/password: "clickhouse-pass"
-      clickhouse-user/networks/ip: "::/0"
-      clickhouse-user/password: "clickhouse-pass"
-      # Or
-      # Generate password and the corresponding SHA256 hash with:
-      # $ PASSWORD=$(base64 < /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-'
-      # 6edvj2+d                                                          <- first line is the password
-      # a927723f4a42cccc50053e81bab1fcf579d8d8fb54a3ce559d42eb75a9118d65  <- second line is the corresponding SHA256 hash
-      # clickhouse-user/password_sha256_hex: "a927723f4a42cccc50053e81bab1fcf579d8d8fb54a3ce559d42eb75a9118d65"
-      # Or
-      # Generate password and the corresponding SHA1 hash with:
-      # $ PASSWORD=$(base64 < /dev/urandom | head -c8); echo "$PASSWORD"; echo -n "$PASSWORD" | sha1sum | tr -d '-' | xxd -r -p | sha1sum | tr -d '-'
-      # LJfoOfxl                                  <- first line is the password, put this in the k8s secret
-      # 3435258e803cefaab7db2201d04bf50d439f6c7f  <- the corresponding double SHA1 hash, put this below
-      # clickhouse-user/password_double_sha1_hex: "3435258e803cefaab7db2201d04bf50d439f6c7f"
-
+      default/password: "${CLICKHOUSE_PASSWORD}"
+      default/networks/ip: "::/0"
+      instana/password: "${CLICKHOUSE_PASSWORD}"
+      instana/networks/ip: "::/0"
+      instanaadmin/password: "${CLICKHOUSE_ADMIN_PASSWORD}"
+      instanaadmin/networks/ip: "::/0"
   templates:
     podTemplates:
       - name: clickhouse
         spec:
           containers:
             - name: instana-clickhouse
-              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:23.3.2.37-1-lts-ibm_v0.26.0
+              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:23.3.10.5-1-lts-ibm_v0.29.0
+              imagePullPolicy: IfNotPresent
               command:
                 - clickhouse-server
                 - --config-file=/etc/clickhouse-server/config.xml
+              resources:
+                requests:
+                  cpu: 1000m
+                  memory: 2Gi
+            - name: clickhouse-log
+              image: registry.access.redhat.com/ubi9/ubi-minimal:9.3-1475
+              command:
+              - /bin/sh
+              - -c
+              - --
+              args:
+                - while true; do sleep 30; done;
+              imagePullPolicy: IfNotPresent
           imagePullSecrets:
             - name: instana-registry
           securityContext:
@@ -88,6 +100,7 @@ spec:
             runAsUser: 1001
     volumeClaimTemplates:
       - name: instana-clickhouse-data-volume
+        reclaimPolicy: Retain
         spec:
           accessModes:
             - ReadWriteOnce
@@ -96,6 +109,7 @@ spec:
             requests:
               storage: "${DATASTORE_SIZE_CLICKHOUSE_DATA}"
       - name: instana-clickhouse-log-volume
+        reclaimPolicy: Retain
         spec:
           accessModes:
             - ReadWriteOnce
@@ -103,3 +117,12 @@ spec:
           resources:
             requests:
               storage: "${DATASTORE_SIZE_CLICKHOUSE_LOG}"
+    serviceTemplates:
+      - name: service-template
+        spec:
+          ports:
+            - name: http
+              port: 8123
+            - name: tcp
+              port: 9000
+          type: ClusterIP

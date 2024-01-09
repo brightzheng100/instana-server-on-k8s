@@ -2,20 +2,24 @@
 
 This repository guides you through how to set up Instana within a single-VM on Kubernetes, bootstrapped by `kubeadm`, from scratch.
 
-Tested environments and the Instana version used:
+Latest review on 09 Jan 2024, with:
 
 - OS on `amd64` / `x86_64` CPU arch:
-  - RHEL 8.x
-  - Ubuntu 20.04
-- on Instana version `253-1`, which is configurable through `export INSTANA_VERSION=<YOUR DESIRED VERSION>`
+  - RHEL 8.x (**Re-tested**)
+  - Ubuntu 20.04 (**To be re-tested**)
+- on Kubernetes version `1.28`, which is configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.28>`
+- on Instana version `261-2`, which is configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 261.2.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 261-2>`
 
-Please note that there are a couple of beta features turned on by default, as of writing:
+Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana` among below items:
 - BeeInstana
-- Apdex
-- Logging
-- Automation / Actioin Framework
+- Logging (beta)
+- Automation / Action Framework (beta)
+- Synthetic Monitoring (beta)
+- ...
 
-You may turn some of them off to save some resources, if you want.
+You may turn on more if you want, by updating [`core.yaml`](./manifests/core.yaml)'s **featureFlags**.
+
+For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=openshift-enabling-optional-features).
 
 
 ## Architecture
@@ -32,7 +36,7 @@ The architecture can be illustrated as below:
 The VM should meet these minimum specs:
 - 16 vCPU
 - 64G RAM
-- 500G HD (SSD preferred)
+- 500G HD (SSD preferred). If the disk is additional one, please mount it to `/storage`, or configure it by `export DATASTORE_MOUNT_ROOT=<YOUR_DESIRED_MOUNT_POINT>`
 
 Please note that the total of default memory requests exceed **64G** so I've scaled down some components to fit into above specs.
 Refer to `manifests/datastore-*.yaml` and [`manifests/core.yaml`](./manifests/core.yaml) for the details.
@@ -42,10 +46,11 @@ The current setup's resource utilization can be referred to below output -- so t
 ```sh
 $ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
 ...
+Allocated resources:
   Resource           Requests          Limits
   --------           --------          ------
-  cpu                12850m (80%)      8100m (50%)
-  memory             60159012Ki (91%)  93421604Ki (141%)
+  cpu                13550m (84%)      8 (50%)
+  memory             61744164Ki (93%)  88528968Ki (134%)
 ```
 
 
@@ -56,7 +61,6 @@ A series of tools will be installed automatically, which include:
 - `kubeadm`, with configurable version
 - `kubectl`, with configurable version
 - `cri-o`, with configurable version
-- `kubectl-instana plugin`, with configurable version
 - [`yq`](https://github.com/mikefarah/yq)
 
 And, there are some other tools required, which typically have been installed already in the VM.
@@ -89,7 +93,7 @@ export INSTANA_SALES_KEY="<THE LICENSE'S SALES KEY>"
 
 Optionally, you may export more environment variables to influence the installation if that makes sense -- the process will respect the desired changes you want to make.
 
-Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be exported.
+Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the potential environment variables that can be configured.
 
 <details>
   <summary>Click here to show some examples.</summary>
@@ -100,15 +104,14 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   export INSTANA_ADMIN_PWD=MyCoolPassword
   ```
 
-  Or, to use another desired version of Instana, if available, do something like this:
+  To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_VERSION="253-1-1"
+  export INSTANA_OPERATOR_VERSION="261.2.0"
+  export INSTANA_OPERATOR_IMAGETAG="261-2"
   ```
 
-  > Note: The versioning pattern may be different in different OS'es. For example:
-  > - On Ubuntu: 253-1-1
-  > - On RHEL: 253_1-1
+  > Note: configured version of Instana may or may not work with currently configured datastore components.
 
 </details>
 
@@ -195,9 +198,9 @@ So, run below commands, well, custom functions actually, one by one instead.
   installing-instana-server-secret-tenant0-unit0
 
   installing-instana-server-core
-  # check before proceeding: wait 20 mins for expected 22 more pods
+  # check before proceeding: wait 20 mins for expected 21 more pods
   # Note: this depends on the beta features as well so don't be that exact
-  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 22 "kubectl get pod -n instana-core"
+  check-namespaced-pod-status-and-keep-displaying-info "instana-core" 20 21 "kubectl get pod -n instana-core"
 
   installing-instana-server-unit
   # check before proceeding: wait 10 mins for expected 6 pods

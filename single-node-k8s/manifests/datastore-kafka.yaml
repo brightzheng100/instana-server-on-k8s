@@ -7,7 +7,7 @@ metadata:
     strimzi.io/cluster: instana-kafka
 spec:
   kafka:
-    version: 3.3.2
+    version: 3.6.0
     replicas: 1
     listeners:
       - name: scram
@@ -21,7 +21,7 @@ spec:
     authorization:
       type: simple
       superUsers:
-        - CN=kafka-user
+        - CN=instanaadmin
     storage:
       type: jbod
       volumes:
@@ -47,11 +47,12 @@ spec:
         tmpDirSizeLimit: 100Mi
     topicOperator: {}
     userOperator: {}
+
 ---
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaUser
 metadata:
-  name: kafka-user
+  name: instana
   namespace: instana-kafka
   labels:
     strimzi.io/cluster: instana-kafka
@@ -63,13 +64,54 @@ spec:
     acls:
       - resource:
           type: topic
-          name: '*'
+          name: "*"
           patternType: literal
-        operation: All
+        operations:
+          - Alter
+          - Read
+          - Write
+          - Create
+          - Delete
+          - Describe
         host: "*"
       - resource:
           type: group
           name: "*"
           patternType: literal
-        operation: All
+        operations:
+          - Alter
+          - Read
+          - Write
+          - Create
+          - Delete
+          - Describe
+        host: "*"
+
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: instanaadmin
+  namespace: instana-kafka
+  labels:
+    strimzi.io/cluster: instana-kafka
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: "*"
+          patternType: literal
+        operations:
+          - All
+        host: "*"
+      - resource:
+          type: group
+          name: "*"
+          patternType: literal
+        operations:
+          - All
         host: "*"

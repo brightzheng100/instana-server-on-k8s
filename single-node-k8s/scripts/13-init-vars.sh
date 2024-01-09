@@ -4,18 +4,19 @@
 
 echo "========: Exporting & checking environment variables"
 
-case $ID in
-  ubuntu) 
-    # Ubuntu
-    export_var_with_default "K8S_VERSION"                       "1.26.3-00"
-    ;;
-  *) 
-    # Others
-    export_var_with_default "K8S_VERSION"                       "1.26.3"
-    ;;
-esac
-export_var_with_default "CRIO_VERSION"                          "1.26"
-export_var_with_default "CALICO_MANIFEST_FILE"                  "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
+# case $ID in
+#   ubuntu) 
+#     # Ubuntu
+#     export_var_with_default "K8S_VERSION"                       "1.28.5-00"
+#     ;;
+#   *) 
+#     # Others
+#     export_var_with_default "K8S_VERSION"                       "1.28.5"
+#     ;;
+# esac
+export_var_with_default "K8S_VERSION"                           "1.28"
+export_var_with_default "CRIO_VERSION"                          "1.28"
+export_var_with_default "CALICO_MANIFEST_FILE"                  "https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml"
 
 
 ######### environment variables required by Instana installation section
@@ -46,23 +47,27 @@ export_var_with_default "DATASTORE_SIZE_KAFKA_ZK"               "10Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_POSTGRES"      "local-path"
 export_var_with_default "DATASTORE_SIZE_POSTGRES"               "3Gi"
 
+export_var_with_default DATASTORE_STORAGE_CLASS_SYNTHETICS      "local-path"
+export_var_with_default DATASTORE_SIZE_SYNTHETICS               "5Gi"
+
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "local-path"
 export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
-case $ID in
-  ubuntu) 
-    # Ubuntu
-    export_var_with_default "INSTANA_VERSION"                   "253-1-1"
-    ;;
-  *) 
-    # Others
-    export_var_with_default "INSTANA_VERSION"                   "253_1-1"
-    ;;
-esac
+export_var_with_default "INSTANA_OPERATOR_VERSION"              "261.2.0"
+export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "261-2"
+# case $ID in
+#   ubuntu) 
+#     # Ubuntu
+#     export_var_with_default "INSTANA_VERSION"                   "253-1-1"
+#     ;;
+#   *) 
+#     # Others
+#     export_var_with_default "INSTANA_VERSION"                   "253_1-1"
+#     ;;
+# esac
 
 
 quit_when_var_not_set   "INSTANA_EXPOSED_FQDN"
-#quit_when_var_not_set   "INSTANA_EXPOSED_PORT"
 export_var_with_default "INSTANA_EXPOSED_PORT"                  "443"   # here I use a special NodePort 443, by default
 export_var_with_default "INSTANA_EXPOSED_PORT_ACCEPTOR"         "1444"  # here I use a special NodePort 1444, by default
 quit_when_var_not_set   "INSTANA_AGENT_KEY"
@@ -73,13 +78,24 @@ export_var_with_default "INSTANA_ADMIN_USER"                    "admin@instana.l
 export_var_with_default "INSTANA_ADMIN_PWD"                     "Passw0rd"
 export_var_with_default "INSTANA_KEY_PASSPHRASE"                "Passw0rd"
 
+######### Random passwords for Instana components
 
-######### check required tools
+export CASSANDRA_PASSWORD=`openssl rand -base64 12 | base64`
+export CASSANDRA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export CLICKHOUSE_PASSWORD=`openssl rand -base64 12 | base64`
+export CLICKHOUSE_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export ELASTICSEARCH_PASSWORD=`openssl rand -base64 12 | base64`
+export ELASTICSEARCH_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export BEEINSTANA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
+export BEEINSTANA_KAFKA_PASSWORD=`openssl rand -base64 12 | base64`
+
+
+######### Check required tools
 
 missed_tools=0
 echo "========: Checking tools"
 echo "Some tools will be installed automatically, which include: "
-logme "$color_green" "kubelet, kubeadm, kubectl, cri-o, kubectl-instana plugin, yq"
+logme "$color_green" "kubelet, kubeadm, kubectl, cri-o, yq"
 
 echo "And, there are some other tools required, which typically will be there already but let's have a check..."
 # check curl

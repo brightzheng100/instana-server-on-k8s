@@ -1,3 +1,29 @@
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-cassandra
+  namespace: instana-cassandra
+  annotations:
+    "helm.sh/resource-policy": keep
+stringData:
+  username: "instana"
+  password: "${CASSANDRA_PASSWORD}"
+type: kubernetes.io/basic-auth
+
+---
+kind: Secret
+apiVersion: v1
+metadata:
+  name: instana-cassandra-admin
+  namespace: instana-cassandra
+  annotations:
+    "helm.sh/resource-policy": keep
+stringData:
+  username: "instanaadmin"
+  password: "${CASSANDRA_ADMIN_PASSWORD}"
+type: kubernetes.io/basic-auth
+
+---
 apiVersion: cassandra.datastax.com/v1beta1
 kind: CassandraDatacenter
 metadata:
@@ -6,12 +32,11 @@ metadata:
 spec:
   clusterName: instana
   serverType: cassandra
-  configBuilderImage: docker.io/datastax/cass-config-builder:1.0-ubi7
-  serverVersion: "4.0.7"
+  serverImage: docker.io/k8ssandra/cass-management-api:4.1.2
+  serverVersion: "4.1.2"
   managementApiAuth:
     insecure: {}
   size: 1
-  allowMultipleNodesPerWorker: false
   resources:
     requests:
       cpu: 1
@@ -27,6 +52,10 @@ spec:
       resources:
         requests:
           storage: "${DATASTORE_SIZE_CASSANDRA}"
+  superuserSecretName: instana-cassandra-admin
+  users:
+    - secretName: instana-cassandra
+      superuser: true
   config:
     jvm-server-options:
       initial_heap_size: "2G"
@@ -43,4 +72,4 @@ spec:
       otc_coalescing_strategy: DISABLED
       memtable_allocation_type: offheap_objects
       num_tokens: 256
-      enable_drop_compact_storage: true
+      drop_compact_storage_enabled: true
