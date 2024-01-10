@@ -10,9 +10,9 @@ function installing-k8s-tools {
 
   sudo mkdir -p /etc/apt/keyrings
 
-  curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | \
-    sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | \
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/deb/Release.key | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/deb/ /" | \
     sudo tee /etc/apt/sources.list.d/kubernetes.list
 
   sudo apt-get update
@@ -21,7 +21,8 @@ function installing-k8s-tools {
   #  sudo apt-cache madison kubelet
   #  sudo apt-cache madison kubeadm
   #  sudo apt-cache madison kubectl
-  sudo apt-get install -y kubelet=$K8S_VERSION kubeadm=$K8S_VERSION kubectl=$K8S_VERSION
+  sudo apt-get install -y kubelet kubeadm kubectl
+  sudo apt-mark hold kubelet kubeadm kubectl
 
   # Enable kubelet
   sudo systemctl enable kubelet
@@ -43,11 +44,22 @@ function installing-k8s-cri {
     OS="xUbuntu_19.10"
   elif [[ $(lsb_release -rs) == "20.04" ]]; then
     OS="xUbuntu_20.04"
+  elif [[ $(lsb_release -rs) == "21.04" ]]; then
+    OS="xUbuntu_21.04"
+  elif [[ $(lsb_release -rs) == "21.10" ]]; then
+    OS="xUbuntu_21.10"
   fi
-  echo "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-  echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/ /" | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.list
-  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/Release.key | sudo apt-key add -
-  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | sudo apt-key add -
+
+  sudo mkdir -p /usr/share/keyrings
+  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/Release.key | \
+    sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-archive-keyring.gpg
+  curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/Release.key | \
+    sudo gpg --dearmor -o /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+
+  echo "deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/ /" | \
+    sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+  echo "deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/$CRIO_VERSION/$OS/ /" | \
+    sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.list
 
   sudo apt-get update
   sudo apt-get install cri-o cri-o-runc -y
