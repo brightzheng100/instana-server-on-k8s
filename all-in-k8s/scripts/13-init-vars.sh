@@ -49,14 +49,14 @@ export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "261-2"
 
 ######### Random passwords for Instana components
 
-export CASSANDRA_PASSWORD=`openssl rand -base64 12 | base64`
-export CASSANDRA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
-export CLICKHOUSE_PASSWORD=`openssl rand -base64 12 | base64`
-export CLICKHOUSE_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
-export ELASTICSEARCH_PASSWORD=`openssl rand -base64 12 | base64`
-export ELASTICSEARCH_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
-export BEEINSTANA_ADMIN_PASSWORD=`openssl rand -base64 12 | base64`
-export BEEINSTANA_KAFKA_PASSWORD=`openssl rand -base64 12 | base64`
+export CASSANDRA_PASSWORD=`openssl rand -hex 12`
+export CASSANDRA_ADMIN_PASSWORD=`openssl rand -hex 12`
+export CLICKHOUSE_PASSWORD=`openssl rand -hex 12`
+export CLICKHOUSE_ADMIN_PASSWORD=`openssl rand -hex 12`
+export ELASTICSEARCH_PASSWORD=`openssl rand -hex 12`
+export ELASTICSEARCH_ADMIN_PASSWORD=`openssl rand -hex 12`
+export BEEINSTANA_ADMIN_PASSWORD=`openssl rand -hex 12`
+export BEEINSTANA_KAFKA_PASSWORD=`openssl rand -hex 12`
 
 
 ######### Check required tools
