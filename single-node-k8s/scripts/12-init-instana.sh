@@ -12,9 +12,9 @@ function creating-namespaces {
 function installing-local-path-provisioner {
   logme "$color_green" "----> installing-local-path-provisioner"
 
-  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.23/deploy/local-path-storage.yaml
+  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
 
-  cat manifests/local-path-config.yaml |  envsubst '$DATASTORE_MOUNT_ROOT' | kubectl apply -f -
+  cat manifests/local-path-config.yaml | envsubst '$DATASTORE_MOUNT_ROOT' | kubectl apply -f -
 
   logme "$color_green" "DONE"
 }
