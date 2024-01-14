@@ -6,7 +6,7 @@
 function installing-k8s-tools {
   logme "$color_green" "----> installing-k8s-tools"
 
-  sudo apt-get install -y ca-certificates curl
+  sudo apt-get install -y ca-certificates curl gpg
 
   sudo mkdir -p /etc/apt/keyrings
 
@@ -48,6 +48,8 @@ function installing-k8s-cri {
     OS="xUbuntu_21.04"
   elif [[ $(lsb_release -rs) == "21.10" ]]; then
     OS="xUbuntu_21.10"
+  elif [[ $(lsb_release -rs) == "22.04" ]]; then
+    OS="xUbuntu_22.04"
   fi
 
   sudo mkdir -p /usr/share/keyrings
