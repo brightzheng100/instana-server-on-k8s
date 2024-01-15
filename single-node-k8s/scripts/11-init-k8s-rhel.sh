@@ -107,6 +107,17 @@ function installing-k8s-cni {
   logme "$color_green" "DONE"
 }
 
+### Installing local-path-provisioner
+function installing-local-path-provisioner {
+  logme "$color_green" "----> installing-local-path-provisioner"
+
+  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
+
+  cat manifests/local-path-config.yaml | envsubst '$DATASTORE_MOUNT_ROOT' | kubectl apply -f -
+
+  logme "$color_green" "DONE"
+}
+
 ### Installing Instana tools: Kubectl plugin, yq, helm
 function installing-tools {
   logme "$color_green" "----> installing-tools"
