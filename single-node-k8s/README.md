@@ -150,6 +150,8 @@ So, run below commands, well, custom functions actually, one by one instead.
 
   installing-k8s-cni
 
+  installing-local-path-provisioner
+
   installing-tools
   ```
 </details>

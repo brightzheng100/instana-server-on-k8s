@@ -16,4 +16,6 @@ getting-ready-k8s
 
 installing-k8s-cni
 
+installing-local-path-provisioner
+
 installing-tools
