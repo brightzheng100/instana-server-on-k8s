@@ -7,19 +7,12 @@ Latest review on 06 June 2024, with:
 - OS on `amd64` / `x86_64` CPU arch:
   - RHEL 8.x (**Re-tested**)
   - Ubuntu 20.04 (**To be re-tested**)
-- on Kubernetes version `1.30`, which is the current default and can be configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.30>`
-- on Instana version `273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
+- Kubernetes `v1.30`, which is the current default and can be configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.30>`
+- Instana `v273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
 
-Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana` among below items:
-- BeeInstana
-- Logging (beta)
-- Automation / Action Framework (beta)
-- Synthetic Monitoring (beta)
-- ...
+Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana`.
 
-You may turn on more if you want, by updating [`core.yaml`](./manifests/core.yaml)'s **featureFlags**.
-
-For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=openshift-enabling-optional-features).
+For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=platform-enabling-optional-features).
 
 
 ## Architecture
