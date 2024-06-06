@@ -4,20 +4,14 @@
 
 This repository guides you through how to set up Instana on an CNCF-certified / OSS Kubernetes cluster, with 3rd party Operators for building the datastore components.
 
-Latest review on 08 Jan 2024, inferred by the testing in [all-in-openshift](../all-in-openshift/) -- but actually didn't re-test:
+Latest review on 06 June 2024, inferred by the testing in [all-in-openshift](../all-in-openshift/) -- but actually didn't re-test:
 
-- Kubernetes v1.26.x -- it should work in other Kubernetes versions.
-- Instana version `261-2`.
+- Kubernetes `v1.30`, which is the current default and can be configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.30>`
+- Instana `v273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
 
-Please note that there are quite some extra configurable features turned on by default, as of writing:
-- BeeInstana
-- Logging (beta)
-- Automation / Action Framework (beta)
-- Synthetic Monitoring (beta)
+Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana`.
 
-You may turn off some of them to save some resources, if you want, by updating [`core.yaml`](./manifests/core.yaml)'s **featureFlags**.
-
-For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=openshift-enabling-optional-features).
+For the complete configurable features, please refer to official doc [here](https://www.ibm.com/docs/en/instana-observability/current?topic=platform-enabling-optional-features).
 
 
 ## Prerequisites
@@ -146,8 +140,8 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_OPERATOR_VERSION="261.2.0"
-  export INSTANA_OPERATOR_IMAGETAG="261-2"
+  export INSTANA_OPERATOR_VERSION="273.1.0"
+  export INSTANA_OPERATOR_IMAGETAG="273-1"
   ```
 
   > Note: configured version of Instana may or may not work with currently configured datastore components.
