@@ -1,5 +1,7 @@
 # Deploying Instana on OpenShift Cluster
 
+**!!!WIP!!!**
+
 This repository guides you through how to set up Instana on an OpenShift cluster, with 3rd party Operators for building the datastore components.
 
 Latest review on 08 Jan 2024, with:
