@@ -35,8 +35,15 @@ EOF
 function installing-k8s-cri {
   logme "$color_green" "----> installing-k8s-cri"
 
-  sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_8/devel:kubic:libcontainers:stable.repo
-  sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION/CentOS_8/devel:kubic:libcontainers:stable:cri-o:$CRIO_VERSION.repo
+  PROJECT_PATH=prerelease:/main
+  cat <<EOF | sudo tee /etc/yum.repos.d/cri-o.repo
+[cri-o]
+name=CRI-O
+baseurl=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/addons:/cri-o:/$PROJECT_PATH/rpm/repodata/repomd.xml.key
+EOF
   sudo dnf install cri-o -y
 
   # Enable and start cri-o service
@@ -111,7 +118,7 @@ function installing-k8s-cni {
 function installing-local-path-provisioner {
   logme "$color_green" "----> installing-local-path-provisioner"
 
-  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.26/deploy/local-path-storage.yaml
+  kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.27/deploy/local-path-storage.yaml
 
   cat manifests/local-path-config.yaml | envsubst '$DATASTORE_MOUNT_ROOT' | kubectl apply -f -
 

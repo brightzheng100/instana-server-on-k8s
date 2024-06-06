@@ -32,11 +32,21 @@ metadata:
 spec:
   clusterName: instana
   serverType: cassandra
-  serverImage: docker.io/k8ssandra/cass-management-api:4.1.2
+  serverImage: artifact-public.instana.io/self-hosted-images/3rd-party/k8ssandra-management-api-for-apache-cassandra:4.1.2_v0.4.0
+  systemLoggerImage: artifact-public.instana.io/self-hosted-images/3rd-party/system-logger:1.18.2_v0.2.0
+  k8ssandraClientImage: artifact-public.instana.io/self-hosted-images/3rd-party/k8ssandra-k8ssandra-client:0.2.2_v0.2.0
   serverVersion: "4.1.2"
+  imagePullPolicy: Always
+  podTemplateSpec:
+    spec:
+      imagePullSecrets:
+      - name: instana-registry
+      containers:
+      - name: cassandra
   managementApiAuth:
     insecure: {}
   size: 1
+  allowMultipleNodesPerWorker: false
   resources:
     requests:
       cpu: 1

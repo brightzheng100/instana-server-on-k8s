@@ -2,13 +2,13 @@
 
 This repository guides you through how to set up Instana within a single-VM on Kubernetes, bootstrapped by `kubeadm`, from scratch.
 
-Latest review on 09 Jan 2024, with:
+Latest review on 06 June 2024, with:
 
 - OS on `amd64` / `x86_64` CPU arch:
   - RHEL 8.x (**Re-tested**)
   - Ubuntu 20.04 (**To be re-tested**)
-- on Kubernetes version `1.28`, which is configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.28>`
-- on Instana version `261-2`, which is configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 261.2.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 261-2>`
+- on Kubernetes version `1.30`, which is the current default and can be configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.30>`
+- on Instana version `273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
 
 Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana` among below items:
 - BeeInstana
@@ -47,16 +47,17 @@ The current setup's resource utilization can be referred to below output -- so t
 $ kubectl describe node/itzvsi-550004ghs4-dv3hyjx3
 ...
 Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
   Resource           Requests          Limits
   --------           --------          ------
-  cpu                13550m (84%)      8 (50%)
-  memory             61744164Ki (93%)  88528968Ki (134%)
+  cpu                15900m (99%)      8 (50%)
+  memory             52429860Ki (79%)  67332168Ki (102%)
 ```
 
 
 ### Tools
 
-A series of tools will be installed automatically, which include:
+A series of tools will be installed **automatically**, which include:
 - `kubelet`, with configurable version
 - `kubeadm`, with configurable version
 - `kubectl`, with configurable version
@@ -107,8 +108,8 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_OPERATOR_VERSION="261.2.0"
-  export INSTANA_OPERATOR_IMAGETAG="261-2"
+  export INSTANA_OPERATOR_VERSION="273.1.0"
+  export INSTANA_OPERATOR_IMAGETAG="273-1"
   ```
 
   > Note: configured version of Instana may or may not work with currently configured datastore components.

@@ -18,59 +18,61 @@ spec:
       replicas: 1
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: gateway
       properties:
         - name: nginx.http.server_names_hash_bucket_size
           value: "256" # This is important when FQDN is long, default 128
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: appdata-health-aggregator
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: appdata-health-processor
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: appdata-reader
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: appdata-writer
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: eum-acceptor
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1200Mi # defaults 2666Mi
     - name: eum-health-processor
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1000Mi # defaults 2666Mi
     - name: eum-processor
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1500Mi # defaults 2666Mi
     - name: gateway
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1200Mi # defaults 2666Mi
     - name: js-stack-trace-translator
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1200Mi # defaults 2666Mi
     - name: sli-evaluator
       resources:
         requests:
-          memory: 1.5Gi # defaults 2666Mi
+          memory: 1200Mi # defaults 2666Mi
   # DatastoreConfigs
   datastoreConfigs:
     cassandraConfigs:
       - hosts: [ instana-instana-cassandra-service.instana-cassandra ]
+        datacenter: instana-cassandra
         authEnabled: true
+        replicationFactor: 1
     clickhouseConfigs:
       - hosts: [ chi-instana-clickhouse-local-0-0.instana-clickhouse ]
         clusterName: local

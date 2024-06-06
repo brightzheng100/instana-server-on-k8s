@@ -13,7 +13,7 @@ function installing-cert-manager {
   logme "$color_green" "----> installing-cert-manager"
 
   # Installing Cert Manager
-  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml
 
   logme "$color_green" "DONE"
 }
@@ -83,8 +83,15 @@ function installing-datastore-cassandra {
 
   helm uninstall cass-operator -n instana-cassandra > /dev/null 2>&1 || true
   helm install cass-operator k8ssandra/cass-operator -n instana-cassandra \
-    --version=0.45.1
+    --version=0.45.2
     #--set=global.clusterScoped=true \
+
+  # Create secret
+  kubectl delete secret/instana-registry -n instana-cassandra > /dev/null 2>&1 || true
+  kubectl create secret docker-registry instana-registry -n instana-cassandra \
+    --docker-server=artifact-public.instana.io \
+    --docker-username=_ \
+    --docker-password="${INSTANA_AGENT_KEY}"
 
   progress-bar 2
 
@@ -153,8 +160,7 @@ function installing-beeinstana {
     --docker-password="${INSTANA_AGENT_KEY}"
   
   helm uninstall instana-beeinstana -n instana-beeinstana > /dev/null 2>&1 || true
-  helm install instana-beeinstana instana/beeinstana-operator -n instana-beeinstana \
-    --version=1.47.0
+  helm install instana-beeinstana instana/beeinstana-operator -n instana-beeinstana
     #--set=clusterScope=true \
     #--set=operatorWatchNamespace="instana-datastore-components" \
 

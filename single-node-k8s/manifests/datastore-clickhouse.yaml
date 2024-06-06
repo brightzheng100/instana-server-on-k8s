@@ -74,7 +74,7 @@ spec:
         spec:
           containers:
             - name: instana-clickhouse
-              image: artifact-public.instana.io/self-hosted-images/k8s/clickhouse:23.3.10.5-1-lts-ibm_v0.29.0
+              image: artifact-public.instana.io/clickhouse-openssl:23.8.9.54-1-lts-ibm
               imagePullPolicy: IfNotPresent
               command:
                 - clickhouse-server
@@ -84,7 +84,7 @@ spec:
                   cpu: 1000m
                   memory: 2Gi
             - name: clickhouse-log
-              image: registry.access.redhat.com/ubi9/ubi-minimal:9.3-1475
+              image: registry.access.redhat.com/ubi9/ubi-minimal:latest
               command:
               - /bin/sh
               - -c

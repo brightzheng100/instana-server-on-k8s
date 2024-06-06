@@ -14,8 +14,8 @@ echo "========: Exporting & checking environment variables"
 #     export_var_with_default "K8S_VERSION"                       "1.28.5"
 #     ;;
 # esac
-export_var_with_default "K8S_VERSION"                           "1.28"
-export_var_with_default "CRIO_VERSION"                          "1.28"
+export_var_with_default "K8S_VERSION"                           "1.30"
+export_var_with_default "CRIO_VERSION"                          "1.30"
 export_var_with_default "CALICO_MANIFEST_FILE"                  "https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml"
 
 
@@ -53,8 +53,8 @@ export_var_with_default DATASTORE_SIZE_SYNTHETICS               "5Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "local-path"
 export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
-export_var_with_default "INSTANA_OPERATOR_VERSION"              "261.2.0"
-export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "261-2"
+export_var_with_default "INSTANA_OPERATOR_VERSION"              "273.1.0"
+export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "273-1"
 # case $ID in
 #   ubuntu) 
 #     # Ubuntu
