@@ -4,7 +4,7 @@
 
 This repository guides you through how to set up Instana on an CNCF-certified / OSS Kubernetes cluster, with 3rd party Operators for building the datastore components.
 
-Latest review on 06 June 2024, inferred by the testing in [all-in-openshift](../all-in-openshift/) as both `single-node-k8s` and `all-in-k8s` are almost identical -- **but actually I didn't re-test**:
+Latest review on 06 June 2024, inferred by the testing in [all-in-k8s](../all-in-k8s/) as both `single-node-k8s` and `all-in-k8s` are almost identical -- **but actually I didn't re-test**:
 
 - Kubernetes `v1.30` -- well, other K8s versions may just work too as long as it fits the K8s version compatibility [here](https://www.ibm.com/docs/en/instana-observability/273?topic=requirements-custom-edition-kubernetes-openshift-container-platform#supported-kubernetes-and-red-hat-openshift-versions), which states "Kubernetes 1.22+".
 - Instana `v273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
