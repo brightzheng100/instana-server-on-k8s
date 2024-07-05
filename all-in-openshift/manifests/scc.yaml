@@ -98,6 +98,6 @@ allowHostIPC: true
 allowHostPID: true
 readOnlyRootFilesystem: false
 users:
-  - system:serviceaccount:instana-clickhouse:clickhouse-operator
+  - system:serviceaccount:instana-clickhouse:ibm-clickhouse-operator
   - system:serviceaccount:instana-clickhouse:zookeeper-operator
   - system:serviceaccount:instana-clickhouse:default

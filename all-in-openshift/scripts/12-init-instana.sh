@@ -71,7 +71,6 @@ function installing-beeinstana {
   
   helm uninstall instana-beeinstana -n instana-beeinstana > /dev/null 2>&1 || true
   helm install instana-beeinstana instana/beeinstana-operator -n instana-beeinstana \
-    --version=1.47.0 \
     --set operator.securityContext.seccompProfile.type=RuntimeDefault
     #--set=clusterScope=true \
     #--set=operatorWatchNamespace="instana-datastore-components" \

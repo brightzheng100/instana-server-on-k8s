@@ -4,10 +4,10 @@
 
 This repository guides you through how to set up Instana on an OpenShift cluster, with 3rd party Operators for building the datastore components.
 
-Latest review on 08 Jan 2024, with:
+Latest review on 05 July 2024, with:
 
-- Red Hat OpenShift Container Platform (OCP) v4.12 -- it should work in other/newer OCP v4.x versions.
-- Instana version `261-2`.
+- Red Hat OpenShift Container Platform (OCP) v4.15 -- it should work in other/newer OCP v4.x versions.
+- Instana version `273-4`.
 
 Please note that there are quite some extra configurable features turned on by default, as of writing:
 - BeeInstana
@@ -42,7 +42,9 @@ Please note that the CSI-compliant storage is very important while deploying Ins
 
 Basically we need two types of storage:
 - Block storage for almost everything of the datastore components;
-- `ReadWriteMany` supported file storage for raw spans, which can be set by `DATASTORE_STORAGE_CLASS_SPANS`, in a real-world multi-node cluster!
+- `ReadWriteMany` supported file storage for:
+  - "raw spans", which can be set by `DATASTORE_STORAGE_CLASS_SPANS`, in a real-world multi-node cluster!
+  - And Synthetic monitoring if it's enabled.
 
 
 ## The TL'DR Guide
@@ -106,9 +108,11 @@ export DATASTORE_SIZE_KAFKA_ZK="10Gi"
 export DATASTORE_STORAGE_CLASS_POSTGRES="ocs-storagecluster-ceph-rbd"
 export DATASTORE_SIZE_POSTGRES="3Gi"
 
-export DATASTORE_STORAGE_CLASS_SYNTHETICS="ocs-storagecluster-ceph-rbd"
+# RWX File storage
+export DATASTORE_STORAGE_CLASS_SYNTHETICS="ocs-storagecluster-cephfs"
 export DATASTORE_SIZE_SYNTHETICS="5Gi"
 
+# RWX File storage
 export DATASTORE_STORAGE_CLASS_SPANS="ocs-storagecluster-cephfs"
 export DATASTORE_SIZE_SPANS="10Gi"
 ```
@@ -129,8 +133,8 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_OPERATOR_VERSION="261.2.0"
-  export INSTANA_OPERATOR_IMAGETAG="261-2"
+  export INSTANA_OPERATOR_VERSION="273.4.0"
+  export INSTANA_OPERATOR_IMAGETAG="273-4"
   ```
 
   > Note: configured version of Instana may or may not work with currently configured datastore components.
