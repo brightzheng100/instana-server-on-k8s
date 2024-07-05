@@ -53,8 +53,8 @@ export_var_with_default DATASTORE_SIZE_SYNTHETICS               "5Gi"
 export_var_with_default "DATASTORE_STORAGE_CLASS_SPANS"         "local-path"
 export_var_with_default "DATASTORE_SIZE_SPANS"                  "10Gi"
 
-export_var_with_default "INSTANA_OPERATOR_VERSION"              "273.1.0"
-export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "273-1"
+export_var_with_default "INSTANA_OPERATOR_VERSION"              "273.4.0"
+export_var_with_default "INSTANA_OPERATOR_IMAGETAG"             "273-4"
 # case $ID in
 #   ubuntu) 
 #     # Ubuntu

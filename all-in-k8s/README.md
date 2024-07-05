@@ -7,7 +7,7 @@ This repository guides you through how to set up Instana on an CNCF-certified / 
 Latest review on 06 June 2024, inferred by the testing in [all-in-k8s](../all-in-k8s/) as both `single-node-k8s` and `all-in-k8s` are almost identical -- **but actually I didn't re-test**:
 
 - Kubernetes `v1.30` -- well, other K8s versions may just work too as long as it fits the K8s version compatibility [here](https://www.ibm.com/docs/en/instana-observability/273?topic=requirements-custom-edition-kubernetes-openshift-container-platform#supported-kubernetes-and-red-hat-openshift-versions), which states "Kubernetes 1.22+".
-- Instana `v273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
+- Instana `v273-4`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.4.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-4>`
 
 Please note that there are quite some configurable features in Instana.
 Due to resource limitation of my testing environment, by default I only turn on `BeeInstana`.
@@ -140,8 +140,8 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_OPERATOR_VERSION="273.1.0"
-  export INSTANA_OPERATOR_IMAGETAG="273-1"
+  export INSTANA_OPERATOR_VERSION="273.4.0"
+  export INSTANA_OPERATOR_IMAGETAG="273-4"
   ```
 
   > Note: configured version of Instana may or may not work with currently configured datastore components.

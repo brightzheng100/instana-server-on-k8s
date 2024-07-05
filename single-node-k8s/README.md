@@ -8,7 +8,7 @@ Latest review on 06 June 2024, with:
   - RHEL 8.x (**Re-tested**)
   - Ubuntu 20.04 (**To be re-tested**)
 - Kubernetes `v1.30`, which is the current default and can be configurable through `export K8S_VERSION=<YOUR DESIRED VERSION, e.g. 1.30>`
-- Instana `v273-1`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.1.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-1>`
+- Instana `v273-4`, which is the current default and can be configurable through `export INSTANA_OPERATOR_VERSION=<YOUR DESIRED VERSION, e.g. 273.4.0>; export INSTANA_OPERATOR_IMAGETAG=<YOUR DESIRED VERSION, e.g. 273-4>`
 
 Please note that there are quite some configurable features in Instana. Due to resource limitation of my testing VM, by default I only turn on `BeeInstana`.
 
@@ -101,8 +101,8 @@ Please refer to [`scripts/13-init-vars.sh`](./scripts/13-init-vars.sh) for the p
   To use another desired version of Instana, if available, do something like this:
 
   ```sh
-  export INSTANA_OPERATOR_VERSION="273.1.0"
-  export INSTANA_OPERATOR_IMAGETAG="273-1"
+  export INSTANA_OPERATOR_VERSION="273.4.0"
+  export INSTANA_OPERATOR_IMAGETAG="273-4"
   ```
 
   > Note: configured version of Instana may or may not work with currently configured datastore components.
