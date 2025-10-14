@@ -39,6 +39,12 @@ function installing-datastore-cassandra {
   helm repo add k8ssandra https://helm.k8ssandra.io/stable
   helm repo update
 
+  kubectl delete secret/instana-registry -n instana-cassandra > /dev/null 2>&1 || true
+  kubectl create secret docker-registry instana-registry -n instana-cassandra \
+    --docker-server=artifact-public.instana.io \
+    --docker-username=_ \
+    --docker-password="${INSTANA_AGENT_KEY}"
+
   helm uninstall cass-operator -n instana-cassandra > /dev/null 2>&1 || true
   helm install cass-operator k8ssandra/cass-operator -n instana-cassandra \
     --version=0.45.1 \
